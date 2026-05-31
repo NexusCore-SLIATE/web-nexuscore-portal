@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>NexusCore-SLIATE | Advanced Technological Institute Badulla</title>
+  <meta name="description" content="Welcome to NexusCore-SLIATE, the official student cybersecurity & software engineering portal at Advanced Technological Institute (ATI) Badulla. Explore projects, meet our community, and view upcoming workshops." />
+  <meta name="keywords" content="NexusCore, SLIATE, ATI Badulla, HNDIT Badulla, Software Engineering Sri Lanka, Cybersecurity Student Portal, Student Developer Community" />
+  <meta name="author" content="NexusCore-SLIATE" />
+  <meta name="theme-color" content="#14213D" />
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nexuscore-sliate.github.io/web-nexuscore-portal/" />
+  <meta property="og:title" content="NexusCore-SLIATE | Advanced Technological Institute Badulla" />
+  <meta property="og:description" content="Building the next generation of software engineering and cybersecurity talent at ATI Badulla. Discover member portfolios, open-source projects, and workshops." />
+  <meta property="og:image" content="./assets/images/logo-sliate.png" />
+
+  <!-- Twitter / Card Preview -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://nexuscore-sliate.github.io/web-nexuscore-portal/" />
+  <meta property="twitter:title" content="NexusCore-SLIATE | ATI Badulla Student Community" />
+  <meta property="twitter:description" content="Exploring software automation, threat hunting, and ethical hacking at SLIATE." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Icons -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  
+</head>
+<body>
+
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress" id="scroll-indicator" aria-hidden="true"></div>
+
+  <!-- Skip-to-content Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ##########
+   SITE HEADER & PRIMARY NAVIGATION
+   ########-->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      
+      <!-- Brand Logo / Identity Zone -->
+      <a href="#home" class="brand-link" id="nav-brand" aria-label="NexusCore Home">
+        <div class="brand-logo-container">
+          <!-- Official logo path inside assets/images -->
+          <img src="./assets/images/logo-sliate.png" alt="SLIATE Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';" />
+          <div id="fallback-logo" class="logo-fallback" style="display:none;" aria-hidden="true">NC</div>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Nexus<span class="brand-accent">Core</span></span>
+          <span class="brand-subtitle">ATI Badulla / SLIATE</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="primary-nav" id="primary-nav" aria-label="Primary site navigation">
+        <ul class="nav-list" role="list">
+          <li><a href="#home" class="nav-link" id="nav-link-home">Home</a></li>
+          <li><a href="#showcase" class="nav-link" id="nav-link-showcase">Members</a></li>
+          <li><a href="#projects" class="nav-link" id="nav-link-projects">Projects</a></li>
+          <li><a href="#timeline" class="nav-link" id="nav-link-timeline">Timeline</a></li>
+          <li><a href="#blog" class="nav-link" id="nav-link-blog">Blog &amp; Events</a></li>
+          <li><a href="#contact" class="nav-link" id="nav-link-contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Action Button & Hamburger Toggle -->
+      <div class="header-actions">
+        <a href="https://github.com/NexusCore-SLIATE" target="_blank" rel="noopener noreferrer" class="btn btn-header-cta" id="github-cta" aria-label="Explore GitHub Organization">
+          <svg class="btn-svg-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:16px; height:16px;">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+        
+        <button class="hamburger-toggle" id="mobile-hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-navigation">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <nav class="mobile-drawer" id="mobile-navigation" aria-label="Mobile menu" aria-hidden="true">
+      <ul class="mobile-drawer-list" role="list">
+        <li><a href="#home" class="mobile-drawer-link">Home</a></li>
+        <li><a href="#showcase" class="mobile-drawer-link">Members</a></li>
+        <li><a href="#projects" class="mobile-drawer-link">Projects</a></li>
+        <li><a href="#timeline" class="mobile-drawer-link">Timeline</a></li>
+        <li><a href="#blog" class="mobile-drawer-link">Blog &amp; Events</a></li>
+        <li><a href="#contact" class="mobile-drawer-link">Contact Us</a></li>
+        <li>
+          <a href="https://github.com/NexusCore-SLIATE" target="_blank" rel="noopener noreferrer" class="mobile-drawer-btn">
+            Connect on GitHub
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ########
+       MAIN CONTENT SYSTEM
+       ######### -->
+  <main id="main-content" tabindex="-1" role="main">
+    
+    <!-- SECTION 1: HERO & METRICS -->
+    <section id="home" class="hero-section">
+      <div class="hero-decorations" aria-hidden="true">
+        <div class="decor-circle decor-1"></div>
+        <div class="decor-circle decor-2"></div>
+      </div>
+      
+      <div class="container hero-container">
+        <span class="academic-badge">
+          <span class="badge-gold-star">★</span> Sri Lanka Institute of Advanced Technological Education
+        </span>
+        <h1 class="hero-title">NexusCore-<span class="accent-text">SLIATE</span></h1>
+        <p class="hero-tagline">
+          The official hub for Software Engineering &amp; Cybersecurity at Advanced Technological Institute Badulla.
+        </p>
+        <p class="hero-description">
+          We bring HNDIT students together to write robust code, conduct penetration testing audits, and engineer open-source software solutions. Accelerating technological excellence.
+        </p>
+        
+        <div class="hero-cta-group">
+          <a href="#showcase" class="btn btn-primary btn-lg" id="hero-cta-explore">
+            Meet Members
+          </a>
+          <a href="#projects" class="btn btn-outline btn-lg" id="hero-cta-projects">
+            Explore Projects
+          </a>
+        </div>
+
+        <!-- Dynamic Counter Stats Block (Hydrated by script.js) -->
+        <div id="stats-counter-grid" class="stats-grid">
+          <!-- Hydrated by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: MEMBER SPOTLIGHT (DIRECTORY) -->
+    <section id="showcase" class="section showcase-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Student Directory</span>
+          <h2 class="section-title">NexusCore Member Showcase</h2>
+          <div class="title-divider" aria-hidden="true"></div>
+          <p class="section-description">
+            Meet the talented student minds driving cybersecurity research, server-side development, and operations within the HNDIT department at ATI Badulla.
+          </p>
+        </div>
+
+        <!-- Filter & Search Controls for Members -->
+        <div class="search-filter-controls">
+          <div class="search-box-wrapper">
+            <input type="text" id="member-search-input" placeholder="Search members by name or skill..." aria-label="Search community members" />
+            <span class="search-icon" aria-hidden="true">🔍</span>
+          </div>
+          <div class="filter-btn-group" id="member-batch-filters">
+            <button class="filter-btn active" data-filter="all">All Batches</button>
+            <button class="filter-btn" data-filter="HNDIT 2025">HNDIT 2025</button>
+            <button class="filter-btn" data-filter="HNDIT 23/24">HNDIT 23/24</button>
+          </div>
+        </div>
+
+        <!-- Member Showcase Grid (Hydrated by script.js) -->
+        <div id="member-directory" class="card-grid" aria-live="polite">
+          <!-- Hydrated dynamically by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ACTIVE PROJECTS ECOSYSTEM -->
+    <section id="projects" class="section projects-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Open Source Code</span>
+          <h2 class="section-title">Active Projects &amp; Engineering</h2>
+          <div class="title-divider" aria-hidden="true"></div>
+          <p class="section-description">
+            Applying theoretical knowledge into open-source repositories, API frameworks, security libraries, and practical automation scripts.
+          </p>
+        </div>
+
+        <!-- Project Categories Filter -->
+        <div class="search-filter-controls" style="justify-content: center;">
+          <div class="filter-btn-group" id="project-filters">
+            <button class="filter-btn active" data-filter="all">All Repositories</button>
+            <button class="filter-btn" data-filter="cybersecurity">Cybersecurity</button>
+            <button class="filter-btn" data-filter="software-engineering">Software Engineering</button>
+          </div>
+        </div>
+
+        <!-- Projects Grid Container (Hydrated by script.js) -->
+        <div id="active-projects" class="card-grid" aria-live="polite">
+          <!-- Hydrated dynamically by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: COMMUNITY TIMELINE -->
+    <section id="timeline" class="section timeline-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Our Milestones</span>
+          <h2 class="section-title">Community Timeline</h2>
+          <div class="title-divider" aria-hidden="true"></div>
+          <p class="section-description">
+            Tracking milestones, coding workshops, CTF exercises, and community development of the ATI Badulla student ecosystem since its founding.
+          </p>
+        </div>
+
+        <!-- Timeline Container (Hydrated by script.js) -->
+        <div id="community-timeline" class="timeline-wrapper">
+          <!-- Hydrated dynamically by script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: BLOG & EVENTS -->
+    <section id="blog" class="section blog-section">
+      <div class="container">
+        
+        <!-- Events Layout Block -->
+        <div class="events-layout-block">
+          <div class="section-header">
+            <span class="section-tag">Academic Calendar</span>
+            <h2 class="section-title">Upcoming Workshops &amp; Labs</h2>
+            <div class="title-divider" aria-hidden="true"></div>
+            <p class="section-description">
+              Participate in upcoming hands-on security scrimmage, system administration bootcamps, and cooperative learning webinars.
+            </p>
+          </div>
+
+          <!-- Events Grid (Hydrated by script.js) -->
+          <div id="upcoming-events" class="events-grid">
+            <!-- Hydrated dynamically by script.js -->
+          </div>
+        </div>
+
+        <!-- Technical Blog Layout Block -->
+        <div class="blog-layout-block" style="margin-top: 6rem;">
+          <div class="section-header">
+            <span class="section-tag">Student Insights</span>
+            <h2 class="section-title">Technical Blogs &amp; Writeups</h2>
+            <div class="title-divider" aria-hidden="true"></div>
+            <p class="section-description">
+              Read architectural analysis, secure design papers, and network capture writeups composed by the active HNDIT members.
+            </p>
+          </div>
+
+          <!-- Blog Grid Container (Hydrated by script.js) -->
+          <div id="blog-articles" class="card-grid">
+            <!-- Hydrated dynamically by script.js -->
+             <h1 style="color: gold; font-family: 'Courier New', Courier, monospace;">-- UPDATING SOON --</h1> <!-- Comment this section when necessary -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 6: CONTACT / RECRUITMENT GATEWAY FORM -->
+    <section id="contact" class="section contact-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Get in Touch</span>
+          <h2 class="section-title">Contact &amp; Recruitment Gateway</h2>
+          <div class="title-divider" aria-hidden="true"></div>
+          <p class="section-description">
+            Looking for talented interns, want to sponsor a student workshop, or have queries about community bootcamps? Send us a secure inquiry directly.
+          </p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Info Column -->
+          <div class="contact-info-panel reveal-up" style="--delay:0.05s">
+            <h3 class="contact-info-title">NexusCore HQ</h3>
+            <p class="contact-info-lead">
+              The official hub for student cybersecurity &amp; software automation at ATI Badulla.
+            </p>
+            
+            <ul class="contact-details-list">
+              <li class="contact-detail-item">
+                <div class="contact-detail-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </div>
+                <div class="contact-detail-content">
+                  <span class="contact-detail-label">Email Address</span>
+                  <span class="contact-detail-value">
+                    <a href="mailto:nesuxcore.sliate@gmail.com">nesuxcore.sliate@gmail.com</a>
+                  </span>
+                </div>
+              </li>
+              <li class="contact-detail-item">
+                <div class="contact-detail-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </div>
+                <div class="contact-detail-content">
+                  <span class="contact-detail-label">Location</span>
+                  <span class="contact-detail-value">Advanced Technological Institute, Badulla, Sri Lanka</span>
+                </div>
+              </li>
+              <li class="contact-detail-item">
+                <div class="contact-detail-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                </div>
+                <div class="contact-detail-content">
+                  <span class="contact-detail-label">GitHub Organization</span>
+                  <span class="contact-detail-value">
+                    <a href="https://github.com/NexusCore-SLIATE" target="_blank" rel="noopener noreferrer">github.com/NexusCore-SLIATE</a>
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Form Column Formspree Integration -->
+          <div class="contact-form-wrap reveal-up" style="--delay:0.15s">
+            <div id="form-status" class="form-status" aria-live="polite" hidden></div>
+            <!-- Formspree action points to: https://formspree.io/f/{your_form_id} -->
+            <form id="contact-form" action="https://formspree.io/f/mvzynwba" method="POST">
+              <div class="form-group">
+                <label class="form-label" for="cf-name">Name</label>
+                <input type="text" id="cf-name" name="name" class="form-input" placeholder="Your Full Name" autocomplete="name" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cf-email">Email</label>
+                <input type="email" id="cf-email" name="email" class="form-input" placeholder="your@email.com" autocomplete="email" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cf-subject">Subject</label>
+                <input type="text" id="cf-subject" name="subject" class="form-input" placeholder="Internship Inquiry / Sponsorship / general" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cf-message">Message</label>
+                <textarea id="cf-message" name="message" class="form-input form-textarea" placeholder="Describe your inquiry..." rows="5" required></textarea>
+              </div>
+              <button class="btn btn-primary btn-full" id="submit-btn" type="submit">Send Secure Message</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- JOIN SECTION -->
+    <section class="join-banner-section">
+      <div class="container join-container">
+        <h2 class="join-title">Ready to build the future of tech?</h2>
+        <p class="join-lead">
+          Open to all current HNDIT students of Advanced Technological Institute Badulla. Level up your coding, network audit expertise, and team synergy.
+        </p>
+        <div class="join-action-group">
+          <a href="https://github.com/NexusCore-SLIATE" target="_blank" rel="noopener noreferrer" class="btn btn-accent btn-lg" id="join-org-btn">
+            Join the GitHub Organization
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ########
+       SITE FOOTER
+       ######## -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+
+      <!-- Column 1: Info & Brand -->
+      <div class="footer-col footer-info">
+        <span class="footer-logo">Nexus<span class="brand-accent">Core</span></span>
+        <span class="footer-sub">ATI Badulla / SLIATE</span>
+        <p class="footer-about">
+          Establishing a center of excellence in software engineering, ethical hacking research, and operational automation for HNDIT students in Sri Lanka.
+        </p>
+        <div class="social-icon-links" aria-label="Social profiles">
+          <a href="https://github.com/NexusCore-SLIATE" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="GitHub Org">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px; height:18px;">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </a>
+          <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="LinkedIn Page">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:18px; height:18px;">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2: Navigation -->
+      <div class="footer-col footer-links">
+        <h3 class="footer-col-title">Portal Map</h3>
+        <ul role="list" class="footer-link-list">
+          <li><a href="#home">Home Base</a></li>
+          <li><a href="#showcase">Member Showcase</a></li>
+          <li><a href="#projects">Active Projects</a></li>
+          <li><a href="#timeline">Our Timeline</a></li>
+          <li><a href="#blog">Blog &amp; Events</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: SLIATE Links -->
+      <div class="footer-col footer-academic">
+        <h3 class="footer-col-title">Institutional</h3>
+        <ul role="list" class="footer-link-list">
+          <li><a href="http://www.sliate.ac.lk/" target="_blank" rel="noopener">SLIATE Head Office</a></li>
+          <li><a href="https://www.atibadulla.edu.lk/" target="_blank" rel="noopener">ATI Badulla Site</a></li>
+          <li><a href="https://github.com/NexusCore-SLIATE" target="_blank" rel="noopener">GitHub Organization</a></li>
+          <li><a href="#projects">Contributor Guidelines</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p>&copy; <span id="footer-year">2026</span> NexusCore-SLIATE. All Rights Reserved. Built with Semantic HTML, CSS, and ES6+ JavaScript by HNDIT students.</p>
+        <p class="mit-license">Released under the MIT License. Open Source contributions encouraged.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       CLIENT SIDE SCRIPTING INVOCATION (FIXED PATH)
+       ========================================== -->
+  <script src="./script.js"></script>
+
+</body>
+</html>
