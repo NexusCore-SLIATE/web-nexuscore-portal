@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "redirects": [
+    { "source": "/admin", "destination": "/admin/dashboard.html", "permanent": true },
+    { "source": "/admin/", "destination": "/admin/dashboard.html", "permanent": true }
+  ]
+}

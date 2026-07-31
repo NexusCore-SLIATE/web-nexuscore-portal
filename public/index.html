@@ -13,14 +13,14 @@
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://nexuscore-sliate.github.io/web-nexuscore-portal/" />
+  <meta property="og:url" content="https://nexuscore.webredirect.org/" />
   <meta property="og:title" content="NexusCore-SLIATE | Advanced Technological Institute Badulla" />
   <meta property="og:description" content="Building the next generation of software engineering and cybersecurity talent at ATI Badulla. Discover member portfolios, open-source projects, and workshops." />
   <meta property="og:image" content="./assets/images/logo-sliate.png" />
 
   <!-- Twitter / Card Preview -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://nexuscore-sliate.github.io/web-nexuscore-portal/" />
+  <meta property="twitter:url" content="https://nexuscore.webredirect.org/" />
   <meta property="twitter:title" content="NexusCore-SLIATE | ATI Badulla Student Community" />
   <meta property="twitter:description" content="Exploring software automation, threat hunting, and ethical hacking at SLIATE." />
 
@@ -30,13 +30,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
 
   <!-- Icons -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   
 </head>
 <body>
+
+  <!-- Site Loading Overlay (Counter 0 -> 100, slides up when data is ready) -->
+  <div id="site-loader" class="site-loader" role="status" aria-label="Loading site data">
+    <div class="loader-inner">
+      <div class="loader-logo" aria-hidden="true">
+        <img src="./assets/images/logo-sliate.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="loader-logo-fallback" style="display:none;">NC</div>
+      </div>
+      <div class="loader-percentage" id="loader-percentage">0</div>
+      <div class="loader-progress" aria-hidden="true">
+        <div class="loader-progress-fill" id="loader-progress-fill"></div>
+      </div>
+      <p class="loader-caption">Loading NexusCore experience</p>
+    </div>
+  </div>
 
   <!-- Scroll Progress Indicator -->
   <div class="scroll-progress" id="scroll-indicator" aria-hidden="true"></div>
@@ -198,9 +213,12 @@
         <!-- Project Categories Filter -->
         <div class="search-filter-controls" style="justify-content: center;">
           <div class="filter-btn-group" id="project-filters">
-            <button class="filter-btn active" data-filter="all">All Repositories</button>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="web">Web</button>
+            <button class="filter-btn" data-filter="mobile">Mobile</button>
+            <button class="filter-btn" data-filter="ai">AI / ML</button>
             <button class="filter-btn" data-filter="cybersecurity">Cybersecurity</button>
-            <button class="filter-btn" data-filter="software-engineering">Software Engineering</button>
+            <button class="filter-btn" data-filter="other">Other</button>
           </div>
         </div>
 
@@ -356,7 +374,7 @@
                 <label class="form-label" for="cf-message">Message</label>
                 <textarea id="cf-message" name="message" class="form-input form-textarea" placeholder="Describe your inquiry..." rows="5" required></textarea>
               </div>
-              <button class="btn btn-primary btn-full" id="submit-btn" type="submit">Send Secure Message</button>
+              <button class="btn btn-primary btn-full" id="submit-btn" type="submit"  >Send Secure Message</button>
             </form>
           </div>
 
@@ -444,7 +462,21 @@
   <!-- ==========================================
        CLIENT SIDE SCRIPTING INVOCATION (FIXED PATH)
        ========================================== -->
-  <script src="./script.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/api/stats.api.js"></script>
+  <script src="./js/api/timeline.api.js"></script>
+  <script src="./js/api/blogs.api.js"></script>
+  <script src="./js/api/members.api.js"></script>
+  <script src="./js/api/projects.api.js"></script>
+  <script src="./js/api/events.api.js"></script>
+  <script src="./js/components/stats.js"></script>
+  <script src="./js/components/timeline.js"></script>
+  <script src="./js/components/blogs.js"></script>
+  <script src="./js/components/members.js"></script>
+  <script src="./js/components/projects.js"></script>
+  <script src="./js/components/events.js"></script>
+  <script src="./js/script.js"></script>
+  <script src="./js/main.js"></script>
 
 </body>
 </html>

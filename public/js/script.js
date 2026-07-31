@@ -9,127 +9,85 @@
 // A. CENTRAL DATA COLLECTIONS & PORTAL STORES
 // ==========================================================================
 
-// 1. Dynamic Counter Stats Block
-const stats = [
-  { label: 'Active Members',      target: 21,  suffix: '+', icon: 'users' },
-  { label: 'Projects Hardened',   target: 0,  suffix: '+', icon: 'code' },
-  { label: 'Core Contributors',   target: 0,   suffix: '+', icon: 'git-branch' },
-  { label: 'Security Writeups',   target: 0,   suffix: '+', icon: 'shield' },
-  { label: 'GitHub Repositories', target: 8,   suffix: '+', icon: 'github' }
-];
+let stats = [];
+let members = [];
+let projects = [];
+let timeline = [];
+let events = [];
+let blogPosts = [];
 
-// 2. SECTION 2: MEMBER SPOTLIGHT
-const members = [
-  {
-    id: 'dulmina-hasith',
-    name: 'Dulmina Hasith',
-    batch: 'HNDIT 23/24 Batch',
-    role: 'Founder & Security Lead',
-    bio: 'Aspiring cybersecurity engineer focused on penetration testing, CTF exploitation, and security automation. Building custom audit scripts and technical writeups.',
-    avatar: './assets/images/avatar/23-24/dulmina.jpeg',
-    skills: ['Network Security', 'CTF & War Games', 'Security Tool', 'Linux Security',],
-    githubUrl: 'https://github.com/GGdulmina',
-    linkedinUrl: 'https://www.linkedin.com/in/dulmina-hasith-346b28357/',
-    badge: 'Founder'
-  },
-];
+async function loadAppData() {
+  const API = CONFIG.API_BASE_URL;
 
-// 3. Active Projects Ecosystem
-const projects = [
-  {
-    id: 'nexus-ctf-framework',
-    title: 'Capture The Flag (CTF)',
-    description: 'A structured repository of custom exploit scripts, network privilege escalation workflows, and detailed encoding/decoding chains from Bandit and custom challenges.',
-    image: './assets/images/projects/ctf.png',
-    technologies: ['Python', 'Bash', 'OverTheWire', 'CTF'],
-    repoUrl: 'https://github.com/GGdulmina/ctf-exploit-scripts-writeups',
-    status: 'active',
-    category: 'cybersecurity'
-  },
-  {
-    id: 'retro_chess',
-    title: 'RETRO_♟_CHESS',
-    description: 'A fully functional, browser-based chess game — no frameworks, no backend, no dependencies. Built for clean gameplay, responsive design, and professional UI/UX.',
-    image: './assets/images/projects/retro_chess.png',
-    technologies: ['JavaScript', 'HTML/CSS', 'Minimax AI', 'Alpha-Beta Pruning'],
-    repoUrl: 'https://github.com/GGdulmina/retro_chess',
-    status: 'active',
-    category: 'software-engineering'
-  },
-  {
-    id: 'sentinelx',
-    title: 'SentinelX',
-    description: 'Linux-based real-time network monitoring tool with a GUI interface. Detects suspicious activities through automated log analysis, anomaly detection, and alerts users to potential threats for immediate action. ',
-    image: './assets/images/projects/sentinelx.png',
-    technologies: ['Python', 'Linux', 'Systemd', 'Bash', 'Regex'],
-    repoUrl: 'https://github.com/GGdulmina/sentinelx',
-    status: 'In-Progress',
-    category: 'cybersecurity'
-  },
-];
-
-// 4. Community Milestones Timeline
-// *important for icons go to https://tabler.io/icons
-const timeline = [
-  {
-    year: '2026',
-    month: 'May',
-    title: 'NexusCore Founded',
-    description: 'NexusCore-SLIATE was officially founded by a passionate cohort of HNDIT software engineering and cybersecurity students at ATI Badulla.',
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'
-  },
-  {
-    year: '2026',
-    month: 'June',
-    title: 'First GitHub Projects',
-    description: 'Launched our open-source organization on GitHub, pushing the CTF exploit scripts repository and attracting early contributors.',
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>'
-  },
-  {
-    year: '2026',
-    month: 'July',
-    title: 'Linux & Server Hardening Bootcamp',
-    description: 'Organized a 3-day hands-on bootcamp covering Wireshark packet captures, firewall configurations, and securing user permissions.',
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
+  async function fetchData(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
   }
-];
 
-// 5. Academic Calendar Workshops & Events
-const events = [
-{
-    id: 'git-github-workshop',
-    title: 'Git & GitHub Version Control Workshop',
-    type: 'Hands-on Technical Session',
-    date: '2026-06-15', // Tip: Replace with your actual scheduled date
-    time: '09:00 AM - 12:00 PM',
-    location: 'Main IT Laboratory, ATI Badulla',
-    description: 'An intensive, hands-on workshop introducing student developers to industry-standard Git workflows. Participants will master branching strategies, repository collaboration, and open-source contributions to build a production-ready engineering mindset.',
-    registrationUrl: '#home',
-    badge: 'workshop'
-  },
-];
-
-// 6. Technical Blogs & OSINT Writeups
-const blogPosts = [
-  {
-    id: '##-####-##',
-    title: '##',
-    excerpt: '',
-    author: 'NexusCore Sec/Dev Team',
-    authorRole: 'Cybersecurity OR Software Unit',
-    date: '2026-05-28',
-    readingTime: 'read time',
-    category: 'cybersecurity/software-engineering',
-    tags: ['Privacy', 'Network Security'],
-    thumbnail: './assets/images/blog/.jpg',
-    url: ''
-  },
-];
+  try {
+    const [s, m, p, t, e, b] = await Promise.all([
+      fetchData(`${API}/stats`),
+      fetchData(`${API}/members`),
+      fetchData(`${API}/projects`),
+      fetchData(`${API}/timeline`),
+      fetchData(`${API}/events`),
+      fetchData(`${API}/blogs`),
+    ]);
+    stats = s;
+    members = m;
+    projects = p;
+    timeline = t;
+    events = e;
+    blogPosts = b;
+  } catch (error) {
+    console.error('loadAppData failed:', error);
+  }
+}
 
 
 // ==========================================================================
 // B. SYSTEM DYNAMIC RENDER LOGIC
 // ==========================================================================
+
+// 0. Site Loading Counter Overlay
+function initSiteLoader() {
+  const loader = document.getElementById('site-loader');
+  if (!loader) return Promise.resolve();
+
+  const percentage = document.getElementById('loader-percentage');
+  const fill = document.getElementById('loader-progress-fill');
+  document.body.classList.add('is-loading');
+
+  const duration = 2000;
+  const start = performance.now();
+
+  return new Promise((resolve) => {
+    function update(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(eased * 100);
+      if (percentage) percentage.textContent = value;
+      if (fill) fill.style.width = `${value}%`;
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        resolve();
+      }
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+function completeSiteLoader() {
+  document.body.classList.remove('is-loading');
+  const loader = document.getElementById('site-loader');
+  if (!loader) return;
+
+  loader.classList.add('loader-done');
+  loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+  setTimeout(() => loader.remove(), 1000);
+}
 
 // 1. Visual Metric Counters Count-Up
 function animateStats() {
@@ -318,9 +276,10 @@ function renderProjectsList(filterCategory = 'all') {
   const container = document.getElementById('active-projects');
   if (!container) return;
 
+  const cats = filterCategory.split(',');
   const filtered = filterCategory === 'all'
     ? projects
-    : projects.filter(project => project.category === filterCategory);
+    : projects.filter(project => cats.includes(project.category));
 
   container.innerHTML = filtered.map(project => `
     <article class="card project-card">
@@ -409,7 +368,7 @@ function renderEvents() {
       </span>
       <h3 class="event-title">${event.title}</h3>
       <div class="event-metadata">
-        <div style="margin-bottom: 3px;">📅 <strong>${event.date}</strong> | 🕒 <strong>${event.time}</strong></div>
+        <div style="margin-bottom: 3px;">📅 <strong>${new Date(event.date).toLocaleDateString()}</strong> | 🕒 <strong>${event.time}</strong></div>
         <div>📍 <strong>${event.location}</strong></div>
       </div>
       <p class="event-desc">${event.description}</p>
@@ -444,7 +403,7 @@ function renderBlogs() {
         <span class="card-badge">${post.category}</span>
         <h4 class="card-main-title" style="margin-top: 0.2rem; font-size: 1.1rem; line-height: 1.3;">${post.title}</h4>
         <div class="card-subtext" style="color: var(--text-muted); font-weight: 500; font-size: 0.75rem; margin-bottom: var(--space-xs);">
-          By ${post.author} • ${post.readingTime}
+          By ${post.authorName} • ${post.readingTime}
         </div>
         <p class="card-body-description" style="font-size: 0.85rem; height: 3.8rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
           ${post.excerpt}
@@ -640,7 +599,10 @@ function initContactForm() {
 // ==========================================================================
 // E. CORE INITIALIZATION ROUTINE ON DOM LOAD
 // ==========================================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await Promise.all([initSiteLoader(), loadAppData()]);
+  completeSiteLoader();
+
   // Navigation & Scroller binds
   initHeaderScrollEffect();
   initScrollProgress();

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusCore SLIATE - Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-body">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-logo">
+          <span class="logo-text">Nexus<span class="gold">Core</span></span>
+          <span class="logo-sub">SLIATE Admin</span>
+        </div>
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-desc">Sign in to manage your portal</p>
+      </div>
+      <form id="loginForm" class="login-form">
+        <div id="loginError" class="form-alert error" style="display:none"></div>
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input class="form-input" type="email" id="email" placeholder="admin@nexuscore.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input class="form-input" type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+          <span id="loginBtnText">Sign In</span>
+          <span id="loginBtnSpinner" class="spinner" style="display:none"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+  <script src="../js/config.js"></script>
+  <script>
+    const API_BASE = CONFIG.API_BASE_URL;
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('loginBtnText');
+      const spinner = document.getElementById('loginBtnSpinner');
+      const errorEl = document.getElementById('loginError');
+      errorEl.style.display = 'none';
+      btn.disabled = true;
+      btnText.textContent = 'Signing in...';
+      spinner.style.display = 'inline-block';
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('admin', JSON.stringify(data.admin));
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Sign In';
+        spinner.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

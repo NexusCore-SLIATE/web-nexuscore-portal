@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusCore SLIATE - Page Not Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .not-found-body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: var(--space-md); text-align: center;
+    }
+    .not-found-container {
+      max-width: 500px; width: 100%;
+    }
+    .not-found-card {
+      background: var(--surface-card);
+      border-radius: var(--border-radius-lg);
+      border: 1.5px solid rgba(255,255,255,0.06);
+      padding: var(--space-xl) var(--space-lg);
+      box-shadow: var(--shadow-lg);
+      position: relative; overflow: hidden;
+    }
+    .not-found-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 100%; height: 4px;
+      background: var(--accent-gold); z-index: 5;
+    }
+    .not-found-code {
+      font-family: var(--font-headings);
+      font-size: 7rem; font-weight: 800;
+      line-height: 1; margin-bottom: var(--space-xs);
+      background: linear-gradient(135deg, var(--accent-gold), var(--tech-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .not-found-title {
+      font-family: var(--font-headings);
+      font-size: 1.4rem; font-weight: 700;
+      color: #fff; margin-bottom: var(--space-xs);
+    }
+    .not-found-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem; margin-bottom: var(--space-lg);
+      line-height: 1.6;
+    }
+    .not-found-actions {
+      display: flex; gap: var(--space-sm);
+      justify-content: center; flex-wrap: wrap;
+    }
+    .not-found-icon {
+      font-size: 3rem; margin-bottom: var(--space-sm);
+      display: block; opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="not-found-body">
+  <div class="not-found-container">
+    <div class="not-found-card">
+      <span class="not-found-icon">🔍</span>
+      <div class="not-found-code">404</div>
+      <h1 class="not-found-title">Page Not Found</h1>
+      <p class="not-found-desc">
+        The page you're looking for doesn't exist or has been moved.
+        Let's get you back on track.
+      </p>
+      <div class="not-found-actions">
+        <button class="btn btn-primary" onclick="goHome()">Go to Dashboard</button>
+        <button class="btn btn-ghost" onclick="goBack()">Go Back</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function goHome() {
+      if (sessionStorage.getItem('token')) {
+        window.location.href = 'dashboard.html';
+      } else {
+        window.location.href = 'login.html';
+      }
+    }
+    function goBack() { window.history.back(); }
+  </script>
+</body>
+</html>
