@@ -21,6 +21,7 @@ NEXUSCORE-SLIATE: Global Design System & Brand Guidelines
   --font-headings: 'Plus Jakarta Sans', var(--font-family);
 
   /* Layout & Spacing */
+  --container-width: 1200px;
   --border-radius-sm: 6px;
   --border-radius-md: 12px;
   --border-radius-lg: 20px;
@@ -57,6 +58,7 @@ html {
   font-size: 16px;
   scrollbar-width: thin;
   scrollbar-color: var(--tech-blue) var(--primary-dark-blue);
+  overflow-x: hidden;
 }
 
 body {
@@ -1352,6 +1354,7 @@ h1, h2, h3, h4 {
 .contact-detail-content {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .contact-detail-label {
@@ -1366,6 +1369,7 @@ h1, h2, h3, h4 {
   font-size: 1rem;
   color: #FFFFFF;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .contact-detail-value a {
@@ -1635,6 +1639,10 @@ h1, h2, h3, h4 {
   
   .hamburger-toggle {
     display: flex;
+  }
+
+  .btn-header-cta {
+    display: none;
   }
 }
 
