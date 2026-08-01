@@ -585,6 +585,7 @@ h1, h2, h3, h4 {
 }
 
 .btn-full {
+  height: 60px;
   width: 100%;
 }
 
@@ -1647,4 +1648,102 @@ h1, h2, h3, h4 {
 .reveal-up.active {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ########
+   16. SITE LOADING OVERLAY (0 -> 100 COUNTER)
+   ######## */
+body.is-loading {
+  overflow: hidden;
+}
+
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(37, 99, 235, 0.12) 0%, transparent 60%),
+    var(--bg-dark);
+  transition: transform 0.7s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s ease, visibility 0.7s;
+}
+
+.site-loader.loader-done {
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  max-width: 340px;
+  text-align: center;
+}
+
+.loader-logo img,
+.loader-logo-fallback {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-gold);
+  box-shadow: var(--glow-accent-gold);
+}
+
+.loader-logo-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-dark-blue) 0%, var(--tech-blue) 100%);
+  color: var(--accent-gold);
+  font-family: var(--font-headings);
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.loader-percentage {
+  font-family: var(--font-headings);
+  font-size: 3.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--text-main);
+}
+
+.loader-percentage::after {
+  content: '%';
+  color: var(--accent-gold);
+}
+
+.loader-progress {
+  width: 240px;
+  height: 5px;
+  border-radius: 99px;
+  background: var(--surface-input);
+  overflow: hidden;
+}
+
+.loader-progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tech-blue) 0%, var(--accent-gold) 100%);
+  transition: width 0.15s linear;
+}
+
+.loader-caption {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loader {
+    transition: none;
+  }
 }

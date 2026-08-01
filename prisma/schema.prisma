@@ -1,0 +1,132 @@
+
+  generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  
+}
+ 
+ 
+ 
+model Stat {
+  id        String   @id @default(cuid())
+  label     String
+  target    Int      @default(0)
+  suffix    String   @default("+")
+  icon      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+ 
+ 
+ 
+model Member {
+  id          String   @id @default(cuid())
+  slug        String   @unique  
+  name        String
+  batch       String
+  role        String
+  bio         String   @db.Text
+  avatar      String
+  skills      String[]  
+  githubUrl   String?
+  linkedinUrl String?
+  badge       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+   
+  projects  Project[]
+  blogPosts BlogPost[]
+}
+
+ 
+ 
+ 
+model Project {
+  id           String   @id @default(cuid())
+  slug         String   @unique  
+  title        String
+  description  String   @db.Text
+  image        String
+  technologies String[]
+  repoUrl      String?
+  status       String    
+  category     String    
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+   
+  authorId String?
+  author   Member? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}
+
+ 
+ 
+ 
+model TimelineEvent {
+  id          String   @id @default(cuid())
+  year        String
+  month       String
+  title       String
+  description String   @db.Text
+  icon        String   @db.Text  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+ 
+ 
+ 
+model Event {
+  id              String    @id @default(cuid())
+  slug            String    @unique  
+  title           String
+  type            String
+  date            DateTime
+  time            String
+  location        String
+  description     String    @db.Text
+  registrationUrl String?
+  badge           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+ 
+ 
+ 
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String?  @unique
+  title       String
+  excerpt     String   @db.Text
+  authorName  String    
+  authorRole  String
+  date        DateTime @default(now())
+  readingTime String?
+  category    String
+  tags        String[]
+  thumbnail   String?
+  url         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+   
+  memberId String?
+  member   Member? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexusCore SLIATE - Admin Panel</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <style>
+      /* Override card styles for dashboard card-based layout */
+      .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-md); }
+      .grid-container:has(.empty-state) { display: flex; align-items: center; justify-content: center; min-height: 50vh; }
+      .timeline-container:has(.empty-state) { display: flex; align-items: center; justify-content: center; min-height: 50vh; }
+      .card { background: var(--surface-card); border-radius: var(--border-radius-md); border: 1.5px solid rgba(255,255,255,0.06); overflow: hidden; box-shadow: var(--shadow-md); transition: all var(--transition-normal); }
+      .card:hover { transform: translateY(-3px); border-color: var(--accent-gold); box-shadow: var(--glow-tech-blue); }
+      .card-image { height: 160px; overflow: hidden; background: var(--primary-dark-blue); position: relative; border-bottom: 2px solid var(--accent-gold); }
+      .card-image img { width: 100%; height: 100%; object-fit: cover; }
+      .card-body { padding: var(--space-md); }
+      .card-title { font-family: var(--font-headings); font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: var(--space-xs); }
+      .card-subtitle { font-size: 0.75rem; font-weight: 600; color: var(--accent-gold); margin-bottom: var(--space-sm); text-transform: uppercase; letter-spacing: 0.5px; }
+      .card-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: var(--space-md); }
+      .card-footer { padding: var(--space-sm) var(--space-md); border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: var(--space-xs); justify-content: flex-end; }
+      .card-detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
+      .card-detail-label { color: var(--text-muted); font-weight: 600; }
+      .card-detail-value { color: #CBD5E1; }
+      .card-avatar { width: 130px; height: 130px; border-radius: 50%; margin: var(--space-md) auto 0; overflow: hidden; border: 4px solid var(--accent-gold); }
+      .card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+      .no-avatar, .no-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 2.2rem; font-weight: 700; background: var(--primary-dark-blue); }
+      .no-image svg { width: 32px; height: 32px; fill: var(--text-muted); opacity: 0.3; }
+      .search-filter { display: flex; gap: var(--space-sm); margin-bottom: var(--space-md); flex-wrap: wrap; }
+      .search-input { flex: 1; min-width: 200px; padding: 0.6rem 0.9rem; border-radius: var(--border-radius-sm); background: var(--surface-input); border: 1.5px solid rgba(255,255,255,0.1); color: #fff; font-family: var(--font-family); font-size: 0.85rem; }
+      .search-input:focus { outline: none; border-color: var(--tech-blue); box-shadow: var(--glow-tech-blue); }
+      .filter-select { padding: 0.6rem 0.9rem; border-radius: var(--border-radius-sm); background: var(--surface-input); border: 1.5px solid rgba(255,255,255,0.1); color: #fff; font-family: var(--font-family); font-size: 0.85rem; cursor: pointer; }
+      .filter-select:focus { outline: none; border-color: var(--tech-blue); }
+      .skills-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: var(--space-xs) 0; }
+      .skill-tag, .tech-tag { font-size: 0.7rem; font-weight: 600; background: rgba(37,99,235,0.12); color: #93C5FD; padding: 0.15rem 0.5rem; border-radius: 4px; }
+      .timeline-container { display: flex; flex-direction: column; gap: var(--space-md); }
+      .timeline-item { position: relative; padding-left: 30px; border-left: 3px solid var(--tech-blue); }
+      .timeline-card { background: var(--surface-card); border-radius: var(--border-radius-md); padding: var(--space-md); border: 1.5px solid rgba(255,255,255,0.06); }
+      .timeline-icon { font-size: 1.5rem; margin-bottom: var(--space-xs); }
+      .timeline-date { font-size: 0.75rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 4px; }
+      .timeline-title { font-family: var(--font-headings); font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+      .timeline-desc { font-size: 0.85rem; color: var(--text-muted); }
+      .timeline-actions { margin-top: var(--space-sm); display: flex; gap: var(--space-xs); }
+      .stat-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs); }
+      .stat-card-title { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+      .stat-card-icon { font-size: 1.2rem; }
+      .stat-card-value { font-family: var(--font-headings); font-size: 2rem; font-weight: 800; color: var(--accent-gold); }
+      .stat-card-change { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+      .page-section { display: none; }
+      .page-section.active { display: block; }
+      .toast { position: fixed; bottom: 20px; right: 20px; padding: 0.8rem 1.5rem; border-radius: var(--border-radius-sm); font-weight: 600; z-index: 2000; opacity: 0; transform: translateY(10px); transition: all var(--transition-normal); }
+      .toast.show { opacity: 1; transform: translateY(0); }
+      .toast-success { background: rgba(16,185,129,0.2); border: 1.5px solid rgba(16,185,129,0.3); color: #34D399; }
+      .toast-error { background: rgba(239,68,68,0.2); border: 1.5px solid rgba(239,68,68,0.3); color: #F87171; }
+      .toast-info { background: rgba(37,99,235,0.2); border: 1.5px solid rgba(37,99,235,0.3); color: #93C5FD; }
+      .image-upload { border: 2px dashed rgba(255,255,255,0.15); border-radius: var(--border-radius-sm); padding: var(--space-md); text-align: center; cursor: pointer; transition: all var(--transition-fast); }
+      .image-upload:hover { border-color: var(--tech-blue); background: rgba(37,99,235,0.05); }
+      .image-upload-label { display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); color: var(--text-muted); cursor: pointer; }
+      .image-upload-label svg { width: 24px; height: 24px; fill: var(--text-muted); }
+      .image-preview { margin-top: var(--space-sm); text-align: center; }
+      .image-preview img { max-width: 120px; max-height: 120px; border-radius: var(--border-radius-sm); border: 2px solid var(--accent-gold); }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+      .form-textarea { width: 100%; padding: 0.7rem 0.9rem; border-radius: var(--border-radius-sm); background: var(--surface-input); border: 1.5px solid rgba(255,255,255,0.1); color: #fff; font-family: var(--font-family); font-size: 0.9rem; min-height: 80px; resize: vertical; }
+      .form-textarea:focus { outline: none; border-color: var(--tech-blue); box-shadow: var(--glow-tech-blue); }
+      .form-select { width: 100%; padding: 0.7rem 0.9rem; border-radius: var(--border-radius-sm); background: var(--surface-input); border: 1.5px solid rgba(255,255,255,0.1); color: #fff; font-family: var(--font-family); font-size: 0.9rem; cursor: pointer; }
+      .form-select:focus { outline: none; border-color: var(--tech-blue); }
+      .action-buttons { display: flex; gap: 0.3rem; }
+      .nav-section { margin-bottom: var(--space-xs); }
+      .nav-section-title { padding: 0.4rem var(--space-sm); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
+      .table-container { overflow-x: auto; }
+      .table-container table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+      .table-container th { text-align: left; padding: 0.8rem 1rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; background: rgba(10,17,40,0.5); }
+      .table-container td { padding: 0.7rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: #CBD5E1; }
+      .table-container tr:hover td { background: rgba(255,255,255,0.02); }
+      .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: var(--space-md); width: auto; max-width: none; max-height: none; overflow: visible; border-radius: 0; border: none; box-shadow: none; animation: none; }
+      .modal.active { display: flex; }
+      .modal-content { background: var(--surface-card); border-radius: var(--border-radius-lg); border: 1.5px solid rgba(255,255,255,0.06); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); position: relative; animation: modalIn 0.25s ease; }
+      .modal-content::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--accent-gold); z-index: 5; }
+      @keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+      .modal-header { padding: var(--space-md) var(--space-lg) 0; display: flex; justify-content: space-between; align-items: flex-start; }
+      .modal-title { font-family: var(--font-headings); font-size: 1.2rem; font-weight: 700; color: #fff; }
+      .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+      .modal-close:hover { color: #fff; }
+      .modal-body { padding: var(--space-md) var(--space-lg); }
+      .modal-footer { padding: 0 var(--space-lg) var(--space-lg); display: flex; gap: var(--space-sm); justify-content: flex-end; }
+      #confirm-modal .modal-content { max-width: 400px; }
+      .confirm-dialog { text-align: center; }
+      .confirm-dialog h3 { font-family: var(--font-headings); margin-bottom: var(--space-sm); color: #fff; }
+      .confirm-dialog p { color: var(--text-muted); margin-bottom: var(--space-md); }
+      @media (max-width: 768px) {
+        .form-row { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Admin Loading Overlay (Counter 0 -> 100, slides up when data is ready) -->
+    <div id="site-loader" class="site-loader" role="status" aria-label="Loading admin panel">
+      <div class="loader-inner">
+        <div class="loader-logo" aria-hidden="true">
+          <img src="../assets/images/logo-sliate.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="loader-logo-fallback" style="display:none;">NC</div>
+        </div>
+        <div class="loader-percentage" id="loader-percentage">0</div>
+        <div class="loader-progress" aria-hidden="true">
+          <div class="loader-progress-fill" id="loader-progress-fill"></div>
+        </div>
+        <p class="loader-caption">Loading admin panel</p>
+      </div>
+    </div>
+
+    <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1 style="margin-left: 15px;
+        ">Nexus<span>Core</span></h1>
+        <p style="margin-left: 15px;margin-bottom: 20px;">SLIATE Admin Panel</p>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Dashboard</div>
+        <div class="nav-item active" data-page="overview">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+              />
+            </svg>
+          </div>
+          <span>Overview</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Content</div>
+        <div class="nav-item" data-page="stats">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
+              />
+            </svg>
+          </div>
+          <span>Stats</span>
+        </div>
+        <div class="nav-item" data-page="members">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+              />
+            </svg>
+          </div>
+          <span>Members</span>
+        </div>
+        <div class="nav-item" data-page="projects">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"
+              />
+            </svg>
+          </div>
+          <span>Projects</span>
+        </div>
+        <div class="nav-item" data-page="timeline">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+              />
+            </svg>
+          </div>
+          <span>Timeline</span>
+        </div>
+        <div class="nav-item" data-page="events">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"
+              />
+            </svg>
+          </div>
+          <span>Events</span>
+        </div>
+        <div class="nav-item" data-page="blogs">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"
+              />
+            </svg>
+          </div>
+          <span>Blogs</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">System</div>
+        <div class="nav-item" data-page="admins">
+          <div class="nav-icon">
+            <svg viewBox="0 0 24 24">
+              <path fill="#fff"
+                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"
+              />
+            </svg>
+          </div>
+          <span>Admins</span>
+        </div>
+      </div>
+    </aside>
+    
+
+    <main class="main-content">
+      <!-- Overview -->
+      <div class="page-section active" id="page-overview">
+        <div class="welcome-card">
+          <div class="welcome-info">
+            <h1 class="welcome-greeting">Welcome back, <span id="ov-admin-name">Admin</span></h1>
+            <p class="welcome-date" id="ov-current-date"></p>
+          </div>
+          <div class="welcome-actions">
+            <button class="btn btn-accent btn-sm" onclick="document.querySelector('[data-page=members]').click()">View Members</button>
+            <button class="btn btn-primary btn-sm" onclick="document.querySelector('[data-page=projects]').click()">View Projects</button>
+          </div>
+        </div>
+        <h2 class="section-title">Overview Stats</h2>
+        <div class="stats-grid" id="overview-stats"></div>
+        <h2 class="section-title">Quick Actions</h2>
+        <div class="actions-grid" id="quick-actions"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="page-section" id="page-stats">
+        <div class="page-header">
+          <h1 class="page-title">Stats Management</h1>
+          <button class="btn btn-primary" onclick="openModal('stats')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Add New Stat
+          </button>
+        </div>
+        <div class="search-filter" style="position:relative">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search stats..."
+            id="stats-search"
+            autocomplete="off"
+          />
+          <div class="suggestions" id="stats-suggestions"></div>
+        </div>
+        <div class="grid-container" id="stats-grid"></div>
+      </div>
+
+      <!-- Members -->
+      <div class="page-section" id="page-members">
+        <div class="page-header">
+          <h1 class="page-title">Members Management</h1>
+          <button class="btn btn-primary" onclick="openModal('members')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Add New Member
+          </button>
+        </div>
+        <div class="search-filter" style="position:relative">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search members..."
+            id="members-search"
+            autocomplete="off"
+          />
+          <div class="suggestions" id="members-suggestions"></div>
+        </div>
+        <div class="grid-container" id="members-grid"></div>
+      </div>
+
+      <!-- Projects -->
+      <div class="page-section" id="page-projects">
+        <div class="page-header">
+          <h1 class="page-title">Projects Management</h1>
+          <button class="btn btn-primary" onclick="openModal('projects')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Add New Project
+          </button>
+        </div>
+        <div class="search-filter" style="position:relative">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search projects..."
+            id="projects-search"
+            autocomplete="off"
+          />
+          <div class="suggestions" id="projects-suggestions"></div>
+        </div>
+        <div class="grid-container" id="projects-grid"></div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="page-section" id="page-timeline">
+        <div class="page-header">
+          <h1 class="page-title">Timeline Events</h1>
+          <button class="btn btn-primary" onclick="openModal('timeline')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Add New Event
+          </button>
+        </div>
+        <div class="search-filter" style="position:relative">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search timeline events..."
+            id="timeline-search"
+            autocomplete="off"
+          />
+          <div class="suggestions" id="timeline-suggestions"></div>
+        </div>
+        <div class="timeline-container" id="timeline-container"></div>
+      </div>
+
+      <!-- Events -->
+      <div class="page-section" id="page-events">
+        <div class="page-header">
+          <h1 class="page-title">Events & Workshops</h1>
+          <div style="display:flex;gap:8px;align-items:center">
+            <a href="https://tabler.io/icons" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="text-decoration:none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              &nbsp; important icons
+            </a>
+            <button class="btn btn-primary" onclick="openModal('events')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Add New Event
+            </button>
+          </div>
+        </div>
+        <div class="search-filter" style="position:relative">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search events..."
+            id="events-search"
+            autocomplete="off"
+          />
+          <div class="suggestions" id="events-suggestions"></div>
+        </div>
+        <div class="grid-container" id="events-grid"></div>
+      </div>
+
+      <!-- Blogs -->
+      <div class="page-section" id="page-blogs">
+        <div class="page-header">
+          <h1 class="page-title">Blog Posts & Writeups</h1>
+          <button class="btn btn-primary" onclick="openModal('blogs')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Add New Post
+          </button>
+        </div>
+        <div class="search-filter" style="position:relative">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search blog posts..."
+            id="blogs-search"
+            autocomplete="off"
+          />
+          <div class="suggestions" id="blogs-suggestions"></div>
+        </div>
+        <div class="grid-container" id="blogs-grid"></div>
+      </div>
+
+      <!-- Admins -->
+      <div class="page-section" id="page-admins">
+        <div class="page-header">
+          <h1 class="page-title">Admin Management</h1>
+          <button class="btn btn-primary" onclick="openModal('admins')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Add New Admin
+          </button>
+        </div>
+        <div class="table-container admins-table-view">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admins-table-body"></tbody>
+          </table>
+        </div>
+        <div class="grid-container admins-card-view" id="admins-grid"></div>
+      </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="modal-title">Add New Item</h2>
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-primary"
+            id="modal-save-btn"
+            onclick="saveItem()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal" id="confirm-modal">
+      <div class="modal-content" style="max-width: 400px">
+        <div class="modal-body">
+          <div class="confirm-dialog">
+            <h3>Confirm Delete</h3>
+            <p>
+              Are you sure you want to delete this item? This action cannot be
+              undone.
+            </p>
+            <div class="action-buttons">
+              <button class="btn btn-secondary" onclick="closeConfirmModal()">
+                Cancel
+              </button>
+              <button class="btn btn-danger" id="confirm-delete-btn">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../js/config.js"></script>
+    <script>
+      const API_BASE = CONFIG.API_BASE_URL;
+
+      function initSiteLoader() {
+        const loader = document.getElementById('site-loader');
+        if (!loader) return Promise.resolve();
+
+        const percentage = document.getElementById('loader-percentage');
+        const fill = document.getElementById('loader-progress-fill');
+        document.body.classList.add('is-loading');
+
+        const duration = 2000;
+        const start = performance.now();
+
+        return new Promise((resolve) => {
+          function update(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const value = Math.round(eased * 100);
+            if (percentage) percentage.textContent = value;
+            if (fill) fill.style.width = `${value}%`;
+            if (progress < 1) {
+              requestAnimationFrame(update);
+            } else {
+              resolve();
+            }
+          }
+          requestAnimationFrame(update);
+        });
+      }
+
+      function completeSiteLoader() {
+        document.body.classList.remove('is-loading');
+        const loader = document.getElementById('site-loader');
+        if (!loader) return;
+
+        loader.classList.add('loader-done');
+        loader.addEventListener('transitionend', () => loader.remove(), { once: true });
+        setTimeout(() => loader.remove(), 1000);
+      }
+
+      function getToken() { return sessionStorage.getItem('token'); }
+      function getAdmin() { return JSON.parse(sessionStorage.getItem('admin') || '{}'); }
+      const isSuperadmin = getAdmin().role === 'superadmin';
+
+      function redirectLogin() {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('admin');
+        window.location.href = 'login.html';
+      }
+
+      // Mobile sidebar toggle
+      const mobileToggle = document.getElementById('mobile-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (mobileToggle) {
+        mobileToggle.addEventListener('click', function () {
+          if (sidebar.classList.contains('open')) closeSidebar();
+          else openSidebar();
+        });
+      }
+      if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+      }
+
+      if (!getToken()) { redirectLogin(); }
+      if (!isSuperadmin) {
+        const adminsNav = document.querySelector('[data-page="admins"]');
+        if (adminsNav) adminsNav.style.display = 'none';
+        const adminsSection = document.getElementById('page-admins');
+        if (adminsSection) adminsSection.style.display = 'none';
+      }
+
+      const tokenCheck = (async function verifyToken() {
+        try {
+          const res = await fetch(`${API_BASE}/auth/me`, {
+            headers: { Authorization: `Bearer ${getToken()}` }
+          });
+          if (!res.ok) { redirectLogin(); }
+        } catch { redirectLogin(); }
+      })();
+
+      async function api(path, options = {}) {
+        const token = getToken();
+        const res = await fetch(`${API_BASE}${path}`, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...options.headers,
+          },
+        });
+        if (res.status === 401) {
+          redirectLogin();
+          return null;
+        }
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Request failed');
+        return data;
+      }
+
+      let currentSection = 'stats';
+      let editingId = null;
+      let currentImageBase64 = '';
+      let cachedData = {};
+      let pendingImageUploads = {};
+
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function () {
+          document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          const page = this.dataset.page;
+          document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+          document.getElementById(`page-${page}`).classList.add('active');
+          if (page !== 'overview') { currentSection = page; loadPage(page); }
+          else { loadOverview(); }
+          if (window.innerWidth <= 768) closeSidebar();
+        });
+      });
+
+      function emptyStateHTML(icon, title, desc, section) {
+        const labelMap = { stats:'Stat', members:'Member', projects:'Project', timeline:'Timeline Event', events:'Event', blogs:'Blog Post' };
+        const label = labelMap[section] || section;
+        const btn = section ? `<button class="btn btn-primary" onclick="openModal('${section}')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            Add ${label}
+          </button>` : '';
+        return `<div class="empty-state">
+          <span class="empty-state-icon">${icon}</span>
+          <div class="empty-state-title">${title}</div>
+          <div class="empty-state-desc">${desc}</div>${btn}
+        </div>`;
+      }
+
+      function getStatIcon(type) {
+        const icons = {
+          stats: '<path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>',
+          members: '<path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>',
+          projects: '<path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>',
+          timeline: '<path fill="currentColor" d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>',
+          events: '<path fill="currentColor" d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>',
+          blogs: '<path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>',
+          admins: '<path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>',
+        };
+        return icons[type] || icons.stats;
+      }
+
+      async function loadOverview() {
+        const container = document.getElementById('overview-stats');
+        const actionsContainer = document.getElementById('quick-actions');
+        container.innerHTML = '<div class="loading-skeleton">Loading...</div>';
+        const admin = getAdmin();
+        document.getElementById('ov-admin-name').textContent = admin?.username || 'Admin';
+        document.getElementById('ov-current-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        actionsContainer.innerHTML = [
+          { label: 'Add Member', section: 'members', icon: '<path fill="currentColor" d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>' },
+          { label: 'Add Project', section: 'projects', icon: '<path fill="currentColor" d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>' },
+          { label: 'Add Event', section: 'events', icon: '<path fill="currentColor" d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>' },
+          { label: 'Add Post', section: 'blogs', icon: '<path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>' },
+        ].map(a => `<button class="action-card" onclick="openModal('${a.section}')"><svg viewBox="0 0 24 24" width="20" height="20">${a.icon}</svg><span>${a.label}</span></button>`).join('');
+        try {
+          const [stats, members, projects, timeline, events, blogs] = await Promise.all([
+            api('/stats').catch(() => []), api('/members').catch(() => []),
+            api('/projects').catch(() => []), api('/timeline').catch(() => []),
+            api('/events').catch(() => []), api('/blogs').catch(() => []),
+          ]);
+          const admins = isSuperadmin ? await api('/auth/admins').catch(() => []) : [];
+          const cards = [
+            { label: 'Stats', value: stats.length, key: 'stats', color: 'gold' },
+            { label: 'Members', value: members.length, key: 'members', color: 'blue' },
+            { label: 'Projects', value: projects.length, key: 'projects', color: 'green' },
+            { label: 'Timeline', value: timeline.length, key: 'timeline', color: 'purple' },
+            { label: 'Events', value: events.length, key: 'events', color: 'orange' },
+            { label: 'Blogs', value: blogs.length, key: 'blogs', color: 'teal' },
+            ...(isSuperadmin ? [{ label: 'Admins', value: admins.length, key: 'admins', color: 'rose' }] : []),
+          ];
+          container.innerHTML = cards.map(c => `<div class="stat-card" data-color="${c.color}">
+            <div class="stat-card-icon-wrap">
+              <svg viewBox="0 0 24 24" width="24" height="24">${getStatIcon(c.key)}</svg>
+            </div>
+            <div class="stat-card-body">
+              <div class="stat-card-label">${c.label}</div>
+              <div class="stat-card-number">${c.value}</div>
+              <div class="stat-card-footer">Total records</div>
+            </div>
+          </div>`).join('');
+        } catch { container.innerHTML = '<div class="empty-state"><p>Error loading data</p></div>'; }
+      }
+
+      async function loadPage(page) {
+        if (page === 'admins' && !isSuperadmin) return;
+        const loaders = {
+          stats: { path: '/stats', render: renderStats },
+          members: { path: '/members', render: renderMembers },
+          projects: { path: '/projects', render: renderProjects },
+          timeline: { path: '/timeline', render: renderTimeline },
+          events: { path: '/events', render: renderEvents },
+          blogs: { path: '/blogs', render: renderBlogs },
+          admins: { path: '/auth/admins', render: renderAdmins },
+        };
+        const loader = loaders[page];
+        if (!loader) return;
+        try {
+          const data = await api(loader.path);
+          cachedData[page] = data || [];
+          loader.render();
+        } catch (err) { showToast('Error loading: ' + err.message, 'error'); }
+      }
+
+      function renderStats() {
+        const items = cachedData.stats || [];
+        const grid = document.getElementById('stats-grid');
+        if (!items.length) { grid.innerHTML = emptyStateHTML('📊', 'No stats yet', 'Start tracking your achievements by adding your first statistic.', 'stats'); return; }
+        grid.innerHTML = items.map(s => `<div class="card"><div class="card-body"><div style="font-size:48px;text-align:center;margin-bottom:15px">${s.icon||'📊'}</div><div class="card-title" style="text-align:center">${s.label}</div><div style="text-align:center;font-size:36px;font-weight:700;color:var(--accent-gold);margin:15px 0">${s.target}${s.suffix||''}</div><div class="card-detail-row"><span class="card-detail-label">Created</span><span class="card-detail-value">${s.createdAt?new Date(s.createdAt).toLocaleDateString():'N/A'}</span></div></div><div class="card-footer"><button class="btn btn-secondary btn-sm" onclick="openModal('stats','${s.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('stats','${s.id}')">Delete</button>`:''}</div></div>`).join('');
+      }
+
+      function renderMembers() {
+        const items = cachedData.members || [];
+        const grid = document.getElementById('members-grid');
+        const search = document.getElementById('members-search').value.toLowerCase();
+        let filtered = items.filter(m => !search || m.name.toLowerCase().includes(search) || m.role.toLowerCase().includes(search) || m.batch.toLowerCase().includes(search));
+        if (!filtered.length) { grid.innerHTML = items.length ? emptyStateHTML('🔍', 'No members match', 'Try a different search term.', '') : emptyStateHTML('👥', 'No members yet', 'Add your first team member to get started.', 'members'); return; }
+        grid.innerHTML = filtered.map(m => `<div class="card"><div class="card-avatar">${m.avatar?`<img src="${m.avatar}" alt="${m.name}" onerror="this.style.display='none'" loading="lazy">`:`<img src="" alt="" style="display:none" onerror="">`}<div class="no-avatar">${m.name.charAt(0).toUpperCase()}</div></div><div class="card-body"><div class="card-title">${m.name}</div><div class="card-subtitle">${m.role} • Batch ${m.batch}</div>${m.badge?`<span class="badge badge-gold" style="margin-bottom:10px;display:inline-block">${m.badge}</span>`:''}<div class="card-text">${m.bio||'No bio'}</div><div class="skills-tags">${(m.skills||[]).map(sk=>`<span class="skill-tag">${sk}</span>`).join('')}</div><div class="card-detail-row"><span class="card-detail-label">Slug</span><span class="card-detail-value">${m.slug}</span></div></div><div class="card-footer"><button class="btn btn-secondary btn-sm" onclick="openModal('members','${m.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('members','${m.id}')">Delete</button>`:''}</div></div>`).join('');
+      }
+
+      function renderProjects() {
+        const items = cachedData.projects || [];
+        const grid = document.getElementById('projects-grid');
+        const search = document.getElementById('projects-search').value.toLowerCase();
+        let filtered = items.filter(p => !search || p.title.toLowerCase().includes(search) || p.description.toLowerCase().includes(search));
+        if (!filtered.length) { grid.innerHTML = items.length ? emptyStateHTML('🔍', 'No projects match', 'Try a different search term.', '') : emptyStateHTML('📦', 'No projects yet', 'Showcase your work by adding the first project.', 'projects'); return; }
+        grid.innerHTML = filtered.map(p => `<div class="card"><div class="card-image">${p.image?`<img src="${p.image}" alt="${p.title}">`:`<div class="no-image"><span>No Image</span></div>`}</div><div class="card-body"><div class="card-title">${p.title}</div><div class="card-subtitle">${p.category.toUpperCase()}</div><span class="badge ${p.status==='active'?'badge-green':p.status==='completed'?'badge-blue':'badge-gold'}" style="margin-bottom:12px;display:inline-block">${p.status}</span><div class="card-text">${p.description||'No description'}</div><div class="skills-tags">${(p.technologies||[]).map(t=>`<span class="tech-tag">${t}</span>`).join('')}</div>${p.repoUrl?`<div class="card-detail-row"><span class="card-detail-label">Repo</span><span class="card-detail-value">${p.repoUrl}</span></div>`:''}</div><div class="card-footer"><button class="btn btn-secondary btn-sm" onclick="openModal('projects','${p.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('projects','${p.id}')">Delete</button>`:''}</div></div>`).join('');
+      }
+
+      function renderTimeline() {
+        const items = cachedData.timeline || [];
+        const container = document.getElementById('timeline-container');
+        const search = document.getElementById('timeline-search').value.toLowerCase();
+        let filtered = items.filter(t => !search||t.title.toLowerCase().includes(search)||t.description.toLowerCase().includes(search));
+        if (!filtered.length) { container.innerHTML = items.length ? emptyStateHTML('🔍', 'No timeline events match', 'Try a different search term.', '') : emptyStateHTML('📅', 'No timeline events yet', 'Document your journey by adding a timeline event.', 'timeline'); return; }
+        container.innerHTML = filtered.map(t => `<div class="timeline-item"><div class="timeline-card"><div class="timeline-icon">${t.icon||'📅'}</div><div class="timeline-date">${t.month} ${t.year}</div><div class="timeline-title">${t.title}</div><div class="timeline-desc">${t.description}</div><div class="timeline-actions"><button class="btn btn-secondary btn-sm" onclick="openModal('timeline','${t.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('timeline','${t.id}')">Delete</button>`:''}</div></div></div>`).join('');
+      }
+
+      function renderEvents() {
+        const items = cachedData.events || [];
+        const grid = document.getElementById('events-grid');
+        const search = document.getElementById('events-search').value.toLowerCase();
+        let filtered = items.filter(e => !search || e.title.toLowerCase().includes(search) || e.location.toLowerCase().includes(search));
+        if (!filtered.length) { grid.innerHTML = items.length ? emptyStateHTML('🔍', 'No events match', 'Try a different search term.', '') : emptyStateHTML('🎉', 'No events yet', 'Host your first event or workshop.', 'events'); return; }
+        grid.innerHTML = filtered.map(e => `<div class="card"><div class="card-body"><div style="font-size:36px;margin-bottom:10px">${e.type==='workshop'?'🎓':e.type==='seminar'?'🎤':e.type==='hackathon'?'💻':'🤝'}</div><div class="card-title">${e.title}</div><div class="card-subtitle">${e.type.toUpperCase()}</div>${e.badge?`<span class="badge badge-gold" style="margin-bottom:10px;display:inline-block">${e.badge}</span>`:''}<div class="card-text">${e.description||'No description'}</div><div class="card-detail-row"><span class="card-detail-label">Date</span><span class="card-detail-value">${e.date?new Date(e.date).toLocaleDateString():'N/A'}</span></div><div class="card-detail-row"><span class="card-detail-label">Time</span><span class="card-detail-value">${e.time||'N/A'}</span></div><div class="card-detail-row"><span class="card-detail-label">Location</span><span class="card-detail-value">${e.location||'N/A'}</span></div></div><div class="card-footer"><button class="btn btn-secondary btn-sm" onclick="openModal('events','${e.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('events','${e.id}')">Delete</button>`:''}</div></div>`).join('');
+      }
+
+      function renderBlogs() {
+        const items = cachedData.blogs || [];
+        const grid = document.getElementById('blogs-grid');
+        const search = document.getElementById('blogs-search').value.toLowerCase();
+        let filtered = items.filter(b => !search || b.title.toLowerCase().includes(search) || b.excerpt.toLowerCase().includes(search) || b.authorName.toLowerCase().includes(search));
+        if (!filtered.length) { grid.innerHTML = items.length ? emptyStateHTML('🔍', 'No blog posts match', 'Try a different search term.', '') : emptyStateHTML('📝', 'No blog posts yet', 'Share your knowledge by writing the first post.', 'blogs'); return; }
+        grid.innerHTML = filtered.map(b => `<div class="card"><div class="card-image">${b.thumbnail?`<img src="${b.thumbnail}" alt="${b.title}">`:`<div class="no-image"><span>No Thumbnail</span></div>`}</div><div class="card-body"><div class="card-title">${b.title}</div><div class="card-subtitle">${b.category.toUpperCase()} • ${b.readingTime||'N/A'} read</div><div class="card-text">${b.excerpt||'No excerpt'}</div><div class="card-detail-row"><span class="card-detail-label">Author</span><span class="card-detail-value">${b.authorName}</span></div><div class="card-detail-row"><span class="card-detail-label">Date</span><span class="card-detail-value">${b.date?new Date(b.date).toLocaleDateString():'N/A'}</span></div><div class="skills-tags">${(b.tags||[]).map(t=>`<span class="skill-tag">#${t}</span>`).join('')}</div></div><div class="card-footer"><button class="btn btn-secondary btn-sm" onclick="openModal('blogs','${b.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('blogs','${b.id}')">Delete</button>`:''}</div></div>`).join('');
+      }
+
+      function renderAdmins() {
+        const items = cachedData.admins || [];
+        const tbody = document.getElementById('admins-table-body');
+        const grid = document.getElementById('admins-grid');
+        const emptyHTML = '<tr><td colspan="5"><div style="text-align:center;padding:40px;color:var(--text-muted)"><span style="font-size:2rem;display:block;margin-bottom:8px;opacity:0.5">🛡️</span><div style="font-family:var(--font-headings);font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px">No admins yet</div><div style="font-size:0.85rem">Add the first administrator to manage the system.</div></div></td></tr>';
+        if (!items.length) {
+          tbody.innerHTML = emptyHTML;
+          grid.innerHTML = emptyStateHTML('🛡️', 'No admins yet', 'Add the first administrator to manage the system.', '');
+          return;
+        }
+        const superadminCount = items.filter(a => a.role === 'superadmin').length;
+        const canDelete = a => isSuperadmin && !(a.role === 'superadmin' && superadminCount === 1);
+        tbody.innerHTML = items.map(a => `<tr><td>${a.id}</td><td>${a.username}</td><td>${a.email}</td><td><span class="badge ${a.role==='superadmin'?'badge-green':'badge-blue'}">${a.role}</span></td><td><div class="action-buttons">${canDelete(a)?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('admins','${a.id}')">Delete</button>`:''}</div></td></tr>`).join('');
+        grid.innerHTML = items.map(a => `<div class="admin-mobile-card"><div class="admin-mobile-info"><div class="admin-mobile-avatar">${a.username.charAt(0).toUpperCase()}</div><div class="admin-mobile-details"><div class="admin-mobile-name">${a.username}</div><div class="admin-mobile-email">${a.email}</div></div></div><div class="admin-mobile-actions"><span class="badge ${a.role==='superadmin'?'badge-green':'badge-blue'}">${a.role}</span>${canDelete(a)?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('admins','${a.id}')">Delete</button>`:''}</div></div>`).join('');
+      }
+
+      const formConfigs = {
+        stats: { title: 'Stat', fields: [{key:'label',label:'Label',type:'text',req:true},{key:'target',label:'Target',type:'number',req:true},{key:'suffix',label:'Suffix',type:'text'},{key:'icon',label:'Icon (emoji)',type:'text'}], create: d=>api('/stats',{method:'POST',body:JSON.stringify(d)}), update: (id,d)=>api(`/stats/${id}`,{method:'PUT',body:JSON.stringify(d)}) },
+        members: { title: 'Member', fields: [{key:'name',label:'Name',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'batch',label:'Batch',type:'text',req:true},{key:'role',label:'Role',type:'text',req:true},{key:'bio',label:'Bio',type:'textarea'},{key:'skills',label:'Skills',type:'text',list:true},{key:'githubUrl',label:'GitHub URL',type:'text'},{key:'linkedinUrl',label:'LinkedIn URL',type:'text'},{key:'badge',label:'Badge',type:'text'},{key:'avatar',label:'Avatar',type:'image',imageFolder:'members'}], create: d=>{if(typeof d.skills==='string')d.skills=d.skills.split(',').map(s=>s.trim()).filter(Boolean);return api('/members',{method:'POST',body:JSON.stringify(d)})}, update: (id,d)=>{if(typeof d.skills==='string')d.skills=d.skills.split(',').map(s=>s.trim()).filter(Boolean);return api(`/members/${id}`,{method:'PUT',body:JSON.stringify(d)})} },
+        projects: { title: 'Project', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'description',label:'Description',type:'textarea'},{key:'technologies',label:'Technologies',type:'text',list:true},{key:'category',label:'Category',type:'select',opts:['web','mobile','ai','cybersecurity','other']},{key:'status',label:'Status',type:'select',opts:['active','completed','archived']},{key:'repoUrl',label:'Repo URL',type:'text'},{key:'image',label:'Image',type:'image',imageFolder:'projects'}], create: d=>{if(typeof d.technologies==='string')d.technologies=d.technologies.split(',').map(s=>s.trim()).filter(Boolean);return api('/projects',{method:'POST',body:JSON.stringify(d)})}, update: (id,d)=>{if(typeof d.technologies==='string')d.technologies=d.technologies.split(',').map(s=>s.trim()).filter(Boolean);return api(`/projects/${id}`,{method:'PUT',body:JSON.stringify(d)})} },
+        timeline: { title: 'Timeline Event', fields: [{key:'year',label:'Year',type:'text',req:true},{key:'month',label:'Month',type:'text',req:true},{key:'title',label:'Title',type:'text',req:true},{key:'description',label:'Description',type:'textarea'},{key:'icon',label:'Icon (emoji)',type:'text'}], create: d=>api('/timeline',{method:'POST',body:JSON.stringify(d)}), update: (id,d)=>api(`/timeline/${id}`,{method:'PUT',body:JSON.stringify(d)}) },
+        events: { title: 'Event', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'type',label:'Type',type:'select',opts:['workshop','seminar','hackathon','meetup','conference','other']},{key:'date',label:'Date',type:'date',req:true},{key:'time',label:'Time',type:'text'},{key:'location',label:'Location',type:'text'},{key:'description',label:'Description',type:'textarea'},{key:'registrationUrl',label:'Registration URL',type:'text'},{key:'badge',label:'Badge',type:'text'}], create: d=>api('/events',{method:'POST',body:JSON.stringify(d)}), update: (id,d)=>api(`/events/${id}`,{method:'PUT',body:JSON.stringify(d)}) },
+        blogs: { title: 'Blog', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text'},{key:'excerpt',label:'Excerpt',type:'textarea'},{key:'authorName',label:'Author Name',type:'text',req:true},{key:'authorRole',label:'Author Role',type:'text'},{key:'date',label:'Date',type:'date'},{key:'readingTime',label:'Reading Time',type:'text'},{key:'category',label:'Category',type:'select',opts:['tutorial','writeup','news','guide','tech']},{key:'tags',label:'Tags',type:'text',list:true},{key:'thumbnail',label:'Thumbnail',type:'image',imageFolder:'blogs'},{key:'url',label:'URL',type:'text'}], create: d=>{if(typeof d.tags==='string')d.tags=d.tags.split(',').map(s=>s.trim()).filter(Boolean);if(d.date&&typeof d.date==='string')d.date=new Date(d.date).toISOString();return api('/blogs',{method:'POST',body:JSON.stringify(d)})}, update: (id,d)=>{if(typeof d.tags==='string')d.tags=d.tags.split(',').map(s=>s.trim()).filter(Boolean);if(d.date&&typeof d.date==='string')d.date=new Date(d.date).toISOString();return api(`/blogs/${id}`,{method:'PUT',body:JSON.stringify(d)})} },
+        admins: { title: 'Admin', fields: [{key:'username',label:'Username',type:'text',req:true},{key:'email',label:'Email',type:'email',req:true},{key:'password',label:'Password',type:'password',req:true},{key:'role',label:'Role',type:'select',opts:['admin','superadmin']}], create: d=>api('/auth/admins',{method:'POST',body:JSON.stringify(d)}), update: null },
+      };
+
+      function openModal(section, editId = null) {
+        const config = formConfigs[section];
+        if (!config) return;
+        editingId = editId;
+        currentImageBase64 = '';
+        const item = editId ? (cachedData[section]||[]).find(x => x.id === editId) : {};
+        document.getElementById('modal-title').textContent = editId ? `Edit ${config.title}` : `Add New ${config.title}`;
+        const body = document.getElementById('modal-body');
+        body.innerHTML = config.fields.map(f => {
+          const val = item ? (item[f.key] !== undefined ? item[f.key] : '') : '';
+          if (f.type === 'textarea') return `<div class="form-group"><label class="form-label">${f.label}${f.req?' *':''}</label><textarea class="form-textarea" id="form-${f.key}">${Array.isArray(val)?val.join(', '):val||''}</textarea></div>`;
+          if (f.type === 'select') return `<div class="form-group"><label class="form-label">${f.label}${f.req?' *':''}</label><select class="form-select" id="form-${f.key}">${(f.opts||[]).map(o => `<option value="${o}" ${String(val)===o?'selected':''}>${o.charAt(0).toUpperCase()+o.slice(1)}</option>`).join('')}</select></div>`;
+          if (f.type === 'image') {
+            const displayVal = Array.isArray(val) ? val.join(', ') : val||'';
+            if (displayVal) pendingImageUploads[f.key] = { url: displayVal };
+            return `<div class="form-group"><label class="form-label">${f.label}${f.req?' *':''}</label><div class="image-upload" onclick="document.getElementById('file-${f.key}').click()"><div class="image-upload-label"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg><span>Click to upload</span></div><input type="file" id="file-${f.key}" accept="image/*" style="display:none" onchange="handleImagePreview(this,'${f.key}','${f.imageFolder}')"></div><div class="image-preview" id="preview-${f.key}">${displayVal?`<img src="${displayVal}" alt="Preview">`:''}</div></div>`;
+          }
+          if (f.list) {
+            const tags = Array.isArray(val) ? val : (val ? String(val).split(',').map(s=>s.trim()).filter(Boolean) : []);
+            const cid = `tags-${f.key}`;
+            return `<div class="form-group"><label class="form-label">${f.label}${f.req?' *':''}</label><div class="tags-input" id="${cid}" data-tags='${JSON.stringify(tags)}' onclick="document.getElementById('tag-input-${f.key}').focus()">${tags.map((t,i) => `<span class="tag-chip">${t}<span class="tag-remove" onclick="event.stopPropagation();removeTag('${cid}',${i})">×</span></span>`).join('')}<input type="text" id="tag-input-${f.key}" placeholder="Type and press Enter" autocomplete="off" onkeydown="handleTagKeydown(event,'${cid}')"></div></div>`;
+          }
+          const inputType = f.type === 'email' ? 'email' : f.type === 'password' ? 'password' : f.type === 'number' ? 'number' : f.type === 'date' ? 'date' : 'text';
+          let displayVal = Array.isArray(val) ? val.join(', ') : val||'';
+          if (f.type === 'date' && displayVal && !/^\d{4}-\d{2}-\d{2}$/.test(displayVal)) {
+            try { displayVal = new Date(displayVal).toISOString().split('T')[0]; } catch {}
+          }
+          return `<div class="form-group"><label class="form-label">${f.label}${f.req?' *':''}</label><input type="${inputType}" class="form-input" id="form-${f.key}" value="${String(displayVal).replace(/"/g,'&quot;')}" ${f.req?'required':''}></div>`;
+        }).join('');
+        document.getElementById('modal').classList.add('active');
+      }
+
+      function closeModal() { document.getElementById('modal').classList.remove('active'); editingId = null; currentImageBase64 = ''; pendingImageUploads = {}; }
+
+      function handleTagKeydown(event, containerId) {
+        if (event.key === 'Enter' || event.key === ',') {
+          event.preventDefault();
+          const input = event.target;
+          const value = input.value.replace(/,/g, '').trim();
+          if (value) {
+            const container = document.getElementById(containerId);
+            const tags = JSON.parse(container.dataset.tags || '[]');
+            if (!tags.includes(value)) {
+              tags.push(value);
+              container.dataset.tags = JSON.stringify(tags);
+              renderTags(container, tags, containerId);
+            }
+            input.value = '';
+          }
+        }
+      }
+
+      function removeTag(containerId, index) {
+        const container = document.getElementById(containerId);
+        const tags = JSON.parse(container.dataset.tags || '[]');
+        tags.splice(index, 1);
+        container.dataset.tags = JSON.stringify(tags);
+        renderTags(container, tags, containerId);
+      }
+
+      function renderTags(container, tags, containerId) {
+        const input = container.querySelector('input');
+        container.innerHTML = tags.map((t, i) =>
+          `<span class="tag-chip">${t}<span class="tag-remove" onclick="event.stopPropagation();removeTag('${containerId}',${i})">&times;</span></span>`
+        ).join('');
+        container.appendChild(input);
+        input.focus();
+      }
+
+      function handleImagePreview(input, fieldKey, folder) {
+        const file = input.files[0];
+        if (!file) return;
+        const preview = document.getElementById(`preview-${fieldKey}`);
+        const reader = new FileReader();
+        reader.onload = function(e) { preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`; };
+        reader.readAsDataURL(file);
+        pendingImageUploads[fieldKey] = { file, folder };
+        input.value = '';
+      }
+
+      async function saveItem() {
+        const config = formConfigs[currentSection];
+        if (!config) return;
+        const data = {};
+        const btn = document.getElementById('modal-save-btn');
+        btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving...';
+        try {
+          const uploads = Object.entries(pendingImageUploads).filter(([,v]) => v.file);
+          for (const [key, upload] of uploads) {
+            const preview = document.getElementById(`preview-${key}`);
+            if (preview) preview.innerHTML = '<div style="color:var(--text-muted);padding:8px;font-size:0.8rem">Uploading...</div>';
+            const formData = new FormData();
+            formData.append('file', upload.file);
+            const res = await fetch(`${API_BASE}/upload?folder=${upload.folder}`, {
+              method: 'POST',
+              headers: { Authorization: `Bearer ${getToken()}` },
+              body: formData,
+            });
+            if (!res.ok) { const err = await res.json(); throw new Error(err.message); }
+            const result = await res.json();
+            pendingImageUploads[key] = { url: result.url };
+            if (preview) preview.innerHTML = `<img src="${result.url}" alt="Uploaded">`;
+          }
+          config.fields.forEach(f => {
+            if (f.type === 'image') {
+              data[f.key] = pendingImageUploads[f.key]?.url || '';
+            } else if (f.list) {
+              const container = document.getElementById(`tags-${f.key}`);
+              data[f.key] = container ? JSON.parse(container.dataset.tags || '[]') : [];
+            } else {
+              const el = document.getElementById(`form-${f.key}`);
+              if (el) data[f.key] = el.value;
+            }
+          });
+          if (editingId) { await config.update(editingId, data); showToast('Updated successfully', 'success'); }
+          else { await config.create(data); showToast('Created successfully', 'success'); }
+          closeModal(); loadPage(currentSection);
+        } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        btn.disabled = false; btn.innerHTML = 'Save';
+      }
+
+      function confirmDelete(section, id) {
+        document.getElementById('confirm-modal').classList.add('active');
+        document.getElementById('confirm-delete-btn').onclick = async () => {
+          try {
+            const deleteMap = { stats:'/stats/', members:'/members/', projects:'/projects/', timeline:'/timeline/', events:'/events/', blogs:'/blogs/', admins:'/auth/admins/' };
+            const path = deleteMap[section];
+            if (!path) throw new Error('Unknown section');
+            await api(path + id, { method: 'DELETE' });
+            showToast('Deleted successfully', 'success');
+            closeConfirmModal();
+            loadPage(section);
+          } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        };
+      }
+
+      function closeConfirmModal() { document.getElementById('confirm-modal').classList.remove('active'); }
+
+      function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast toast-${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+
+      function getSuggestionFields(page) {
+        const map = {
+          stats: { label: 'label', sub: null },
+          members: { label: 'name', sub: 'role' },
+          projects: { label: 'title', sub: 'category' },
+          timeline: { label: 'title', sub: 'month' },
+          events: { label: 'title', sub: 'type' },
+          blogs: { label: 'title', sub: 'authorName' },
+        };
+        return map[page];
+      }
+
+      function showSuggestions(page, query) {
+        const container = document.getElementById(`${page}-suggestions`);
+        if (!container || !query || !cachedData[page]) { if (container) container.innerHTML = ''; return; }
+        const q = query.toLowerCase();
+        const items = cachedData[page] || [];
+        const fields = getSuggestionFields(page);
+        if (!fields) return;
+        const matches = items.filter(item => {
+          const val = item[fields.label];
+          return val && val.toLowerCase().includes(q);
+        }).slice(0, 8);
+        if (!matches.length) { container.innerHTML = ''; return; }
+        container.innerHTML = matches.map(item => {
+          const label = item[fields.label];
+          const sub = fields.sub ? item[fields.sub] : null;
+            const escaped = label.replace(/'/g,"\\'");
+            return `<div class="suggestion-item" onclick="document.getElementById('${page}-search').value='${escaped}';document.getElementById('${page}-suggestions').innerHTML='';window.renderMap.${page}()">
+            <span class="suggestion-label">${label}</span>${sub ? `<span class="suggestion-sub">${sub}</span>` : ''}
+          </div>`;
+        }).join('');
+      }
+
+      window.renderMap = { stats: renderStats, members: renderMembers, projects: renderProjects, timeline: renderTimeline, events: renderEvents, blogs: renderBlogs, admins: renderAdmins };
+
+      document.querySelectorAll('.search-input').forEach(input => {
+        input.addEventListener('input', function () {
+          const page = this.id.replace('-search', '');
+          showSuggestions(page, this.value);
+          if (cachedData[page] && renderMap[page]) renderMap[page]();
+        });
+        input.addEventListener('blur', function () {
+          setTimeout(() => { const s = document.getElementById(`${this.id.replace('-search','')}-suggestions`); if (s) s.innerHTML = ''; }, 200);
+        });
+        input.addEventListener('focus', function () {
+          const page = this.id.replace('-search', '');
+          showSuggestions(page, this.value);
+        });
+      });
+
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          document.querySelectorAll('.suggestions').forEach(s => s.innerHTML = '');
+          if (document.getElementById('modal')?.style.display === 'flex') closeModal();
+          if (document.getElementById('confirm-modal')?.style.display === 'flex') closeConfirmModal();
+        }
+      });
+
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('.search-filter')) {
+          document.querySelectorAll('.suggestions').forEach(s => s.innerHTML = '');
+        }
+        if (event.target.id === 'modal') closeModal();
+        if (event.target.id === 'confirm-modal') closeConfirmModal();
+      });
+
+      (async function initAdmin() {
+        await Promise.all([initSiteLoader(), tokenCheck, loadOverview()]);
+        completeSiteLoader();
+      })();
+    </script>
+  </body>
+</html>
