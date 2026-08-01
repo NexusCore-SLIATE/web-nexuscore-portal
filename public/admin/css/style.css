@@ -443,9 +443,10 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   }
 
   /* Timeline */
-  .timeline-container { gap: var(--space-sm); }
-  .timeline-item { padding-left: 24px; }
-  .timeline-card { padding: var(--space-sm); }
+  .timeline-container { gap: var(--space-md); }
+  .timeline-dot { width: 38px; height: 38px; }
+  .timeline-container::before { left: 18px; }
+  .timeline-card { padding: var(--space-sm); margin-left: var(--space-sm); }
   .timeline-actions { flex-wrap: wrap; }
 
   /* Table */

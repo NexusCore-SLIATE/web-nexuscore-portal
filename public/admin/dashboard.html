@@ -22,6 +22,13 @@
       .card-detail-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.03); }
       .card-detail-label { color: var(--text-muted); font-weight: 600; }
       .card-detail-value { color: #CBD5E1; }
+      .card.event-admin-card { display: flex; flex-direction: column; padding: 1.75rem; border-left: 5px solid var(--tech-blue); box-shadow: var(--shadow-sm); }
+      .event-admin-badge { align-self: flex-start; display: inline-block; font-size: 0.7rem; font-weight: 700; background-color: rgba(37,99,235,0.15); color: #93C5FD; padding: 0.25rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: var(--space-xs); }
+      .event-admin-badge-gold { background-color: rgba(251,191,36,0.15); color: var(--accent-gold); }
+      .event-admin-title { font-family: var(--font-headings); font-size: 1.15rem; color: #FFFFFF; margin-bottom: var(--space-xs); font-weight: 700; }
+      .event-admin-metadata { font-size: 0.8rem; color: var(--text-muted); margin-bottom: var(--space-sm); line-height: 1.4; }
+      .event-admin-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: var(--space-md); flex-grow: 1; }
+      .event-admin-actions { margin-top: auto; padding-top: var(--space-sm); border-top: 1px solid rgba(255,255,255,0.08); display: flex; gap: var(--space-xs); }
       .card-avatar { width: 130px; height: 130px; border-radius: 50%; margin: var(--space-md) auto 0; overflow: hidden; border: 4px solid var(--accent-gold); }
       .card-avatar img { width: 100%; height: 100%; object-fit: cover; }
       .no-avatar, .no-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 2.2rem; font-weight: 700; background: var(--primary-dark-blue); }
@@ -33,14 +40,20 @@
       .filter-select:focus { outline: none; border-color: var(--tech-blue); }
       .skills-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: var(--space-xs) 0; }
       .skill-tag, .tech-tag { font-size: 0.7rem; font-weight: 600; background: rgba(37,99,235,0.12); color: #93C5FD; padding: 0.15rem 0.5rem; border-radius: 4px; }
-      .timeline-container { display: flex; flex-direction: column; gap: var(--space-md); }
-      .timeline-item { position: relative; padding-left: 30px; border-left: 3px solid var(--tech-blue); }
-      .timeline-card { background: var(--surface-card); border-radius: var(--border-radius-md); padding: var(--space-md); border: 1.5px solid rgba(255,255,255,0.06); }
-      .timeline-icon { font-size: 1.5rem; margin-bottom: var(--space-xs); }
-      .timeline-date { font-size: 0.75rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 4px; }
-      .timeline-title { font-family: var(--font-headings); font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
-      .timeline-desc { font-size: 0.85rem; color: var(--text-muted); }
-      .timeline-actions { margin-top: var(--space-sm); display: flex; gap: var(--space-xs); }
+      .timeline-container { display: flex; flex-direction: column; gap: var(--space-lg); position: relative; padding: 8px 0; }
+      .timeline-container::before { content: ''; position: absolute; top: 12px; bottom: 12px; left: 21px; width: 3px; background: linear-gradient(180deg, var(--tech-blue) 0%, rgba(37,99,235,0.15) 100%); border-radius: 3px; }
+      .timeline-container:has(.empty-state)::before { display: none; }
+      .timeline-item { position: relative; display: flex; align-items: flex-start; }
+      .timeline-dot { flex-shrink: 0; width: 44px; height: 44px; position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: linear-gradient(135deg, var(--primary-dark-blue) 0%, var(--tech-blue) 100%); border: 3px solid var(--tech-blue); box-shadow: 0 0 0 5px var(--bg-dark), var(--glow-tech-blue); }
+      .timeline-dot-icon { font-size: 1.15rem; line-height: 1; }
+      .timeline-card { position: relative; flex: 1; min-width: 0; max-width: 560px; margin-left: var(--space-md); background: var(--surface-card); border-radius: var(--border-radius-md); padding: var(--space-md); border: 1.5px solid rgba(255,255,255,0.06); box-shadow: var(--shadow-sm); transition: all var(--transition-normal); }
+      .timeline-card::before { content: ''; position: absolute; top: 18px; left: -7px; width: 13px; height: 13px; transform: rotate(45deg); background: var(--surface-card); border-left: 1.5px solid rgba(255,255,255,0.06); border-bottom: 1.5px solid rgba(255,255,255,0.06); }
+      .timeline-card:hover { transform: translateY(-2px); border-color: rgba(251,191,36,0.45); box-shadow: var(--shadow-md); }
+      .timeline-card-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: 6px; }
+      .timeline-date { display: inline-flex; align-items: center; font-size: 0.7rem; font-weight: 800; color: var(--accent-gold); background: rgba(251,191,36,0.12); padding: 0.28rem 0.7rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
+      .timeline-title { font-family: var(--font-headings); font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+      .timeline-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+      .timeline-actions { display: flex; gap: 0.35rem; }
       .stat-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xs); }
       .stat-card-title { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
       .stat-card-icon { font-size: 1.2rem; }
@@ -106,6 +119,11 @@
       .member-social-link svg { width: 18px; height: 18px; }
       @media (max-width: 768px) {
         .form-row { grid-template-columns: 1fr; }
+        .timeline-container { gap: var(--space-md); }
+        .timeline-container::before { left: 18px; }
+        .timeline-dot { width: 38px; height: 38px; }
+        .timeline-card { margin-left: var(--space-sm); padding: var(--space-sm); }
+        .timeline-actions { flex-wrap: wrap; }
       }
     </style>
   </head>
@@ -326,12 +344,18 @@
       <div class="page-section" id="page-timeline">
         <div class="page-header">
           <h1 class="page-title">Timeline Events</h1>
-          <button class="btn btn-primary" onclick="openModal('timeline')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-            </svg>
-            Add New Event
-          </button>
+          <div style="display:flex;gap:8px;align-items:center">
+            <a href="https://tabler.io/icons" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="text-decoration:none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              &nbsp; Import icon for
+            </a>
+            <button class="btn btn-primary" onclick="openModal('timeline')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Add New Event
+            </button>
+          </div>
         </div>
         <div class="search-filter" style="position:relative">
           <input
@@ -756,7 +780,7 @@
         const search = document.getElementById('timeline-search').value.toLowerCase();
         let filtered = items.filter(t => !search||t.title.toLowerCase().includes(search)||t.description.toLowerCase().includes(search));
         if (!filtered.length) { container.innerHTML = items.length ? emptyStateHTML('🔍', 'No timeline events match', 'Try a different search term.', '') : emptyStateHTML('📅', 'No timeline events yet', 'Document your journey by adding a timeline event.', 'timeline'); return; }
-        container.innerHTML = filtered.map(t => `<div class="timeline-item"><div class="timeline-card"><div class="timeline-icon">${t.icon||'📅'}</div><div class="timeline-date">${t.month} ${t.year}</div><div class="timeline-title">${t.title}</div><div class="timeline-desc">${t.description}</div><div class="timeline-actions"><button class="btn btn-secondary btn-sm" onclick="openModal('timeline','${t.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('timeline','${t.id}')">Delete</button>`:''}</div></div></div>`).join('');
+        container.innerHTML = filtered.map(t => `<div class="timeline-item"><div class="timeline-dot" aria-hidden="true"><span class="timeline-dot-icon">${t.icon||'📅'}</span></div><div class="timeline-card"><div class="timeline-card-top"><span class="timeline-date">${t.month} ${t.year}</span><div class="timeline-actions"><button class="btn btn-secondary btn-sm" onclick="openModal('timeline','${t.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('timeline','${t.id}')">Delete</button>`:''}</div></div><h3 class="timeline-title">${t.title}</h3><p class="timeline-desc">${t.description||''}</p></div></div>`).join('');
       }
 
       function renderEvents() {
@@ -765,7 +789,7 @@
         const search = document.getElementById('events-search').value.toLowerCase();
         let filtered = items.filter(e => !search || e.title.toLowerCase().includes(search) || e.location.toLowerCase().includes(search));
         if (!filtered.length) { grid.innerHTML = items.length ? emptyStateHTML('🔍', 'No events match', 'Try a different search term.', '') : emptyStateHTML('🎉', 'No events yet', 'Host your first event or workshop.', 'events'); return; }
-        grid.innerHTML = filtered.map(e => `<div class="card"><div class="card-body"><div style="font-size:36px;margin-bottom:10px">${e.type==='workshop'?'🎓':e.type==='seminar'?'🎤':e.type==='hackathon'?'💻':'🤝'}</div><div class="card-title">${e.title}</div><div class="card-subtitle">${e.type.toUpperCase()}</div>${e.badge?`<span class="badge badge-gold" style="margin-bottom:10px;display:inline-block">${e.badge}</span>`:''}<div class="card-text">${e.description||'No description'}</div><div class="card-detail-row"><span class="card-detail-label">Date</span><span class="card-detail-value">${e.date?new Date(e.date).toLocaleDateString():'N/A'}</span></div><div class="card-detail-row"><span class="card-detail-label">Time</span><span class="card-detail-value">${e.time||'N/A'}</span></div><div class="card-detail-row"><span class="card-detail-label">Location</span><span class="card-detail-value">${e.location||'N/A'}</span></div></div><div class="card-footer"><button class="btn btn-secondary btn-sm" onclick="openModal('events','${e.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('events','${e.id}')">Delete</button>`:''}</div></div>`).join('');
+        grid.innerHTML = filtered.map(e => `<div class="card event-admin-card"><span class="event-admin-badge">${e.type||'Event'}</span>${e.badge?`<span class="event-admin-badge event-admin-badge-gold" style="margin-top:-6px">${e.badge}</span>`:''}<h3 class="event-admin-title">${e.title}</h3><div class="event-admin-metadata"><div style="margin-bottom:3px">📅 <strong>${e.date?new Date(e.date).toLocaleDateString():'N/A'}</strong> | 🕒 <strong>${e.time||'N/A'}</strong></div><div>📍 <strong>${e.location||'N/A'}</strong></div></div><p class="event-admin-desc">${e.description||'No description'}</p><div class="event-admin-actions"><button class="btn btn-secondary btn-sm" onclick="openModal('events','${e.id}')">Edit</button>${isSuperadmin?`<button class="btn btn-danger btn-sm" onclick="confirmDelete('events','${e.id}')">Delete</button>`:''}</div></div>`).join('');
       }
 
       function renderBlogs() {
@@ -798,7 +822,7 @@
         members: { title: 'Member', fields: [{key:'name',label:'Name',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'batch',label:'Batch',type:'text',req:true},{key:'role',label:'Role',type:'text',req:true},{key:'bio',label:'Bio',type:'textarea'},{key:'skills',label:'Skills',type:'text',list:true},{key:'githubUrl',label:'GitHub URL',type:'text'},{key:'linkedinUrl',label:'LinkedIn URL',type:'text'},{key:'badge',label:'Badge',type:'text'},{key:'avatar',label:'Avatar',type:'image',imageFolder:'members'}], create: d=>{if(typeof d.skills==='string')d.skills=d.skills.split(',').map(s=>s.trim()).filter(Boolean);return api('/members',{method:'POST',body:JSON.stringify(d)})}, update: (id,d)=>{if(typeof d.skills==='string')d.skills=d.skills.split(',').map(s=>s.trim()).filter(Boolean);return api(`/members/${id}`,{method:'PUT',body:JSON.stringify(d)})} },
         projects: { title: 'Project', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'description',label:'Description',type:'textarea'},{key:'technologies',label:'Technologies',type:'text',list:true},{key:'category',label:'Category',type:'select',opts:['web','mobile','ai','cybersecurity','software','other']},{key:'status',label:'Status',type:'select',opts:['Active','Completed','In Process']},{key:'repoUrl',label:'Repo URL',type:'text'},{key:'image',label:'Image',type:'image',imageFolder:'projects'}], create: d=>{if(typeof d.technologies==='string')d.technologies=d.technologies.split(',').map(s=>s.trim()).filter(Boolean);return api('/projects',{method:'POST',body:JSON.stringify(d)})}, update: (id,d)=>{if(typeof d.technologies==='string')d.technologies=d.technologies.split(',').map(s=>s.trim()).filter(Boolean);return api(`/projects/${id}`,{method:'PUT',body:JSON.stringify(d)})} },
         timeline: { title: 'Timeline Event', fields: [{key:'year',label:'Year',type:'text',req:true},{key:'month',label:'Month',type:'text',req:true},{key:'title',label:'Title',type:'text',req:true},{key:'description',label:'Description',type:'textarea'},{key:'icon',label:'Icon (emoji)',type:'text'}], create: d=>api('/timeline',{method:'POST',body:JSON.stringify(d)}), update: (id,d)=>api(`/timeline/${id}`,{method:'PUT',body:JSON.stringify(d)}) },
-        events: { title: 'Event', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'type',label:'Type',type:'select',opts:['workshop','seminar','hackathon','meetup','conference','other']},{key:'date',label:'Date',type:'date',req:true},{key:'time',label:'Time',type:'text'},{key:'location',label:'Location',type:'text'},{key:'description',label:'Description',type:'textarea'},{key:'registrationUrl',label:'Registration URL',type:'text'},{key:'badge',label:'Badge',type:'text'}], create: d=>api('/events',{method:'POST',body:JSON.stringify(d)}), update: (id,d)=>api(`/events/${id}`,{method:'PUT',body:JSON.stringify(d)}) },
+        events: { title: 'Event', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text',req:true},{key:'type',label:'Type',type:'text'},{key:'date',label:'Date',type:'date',req:true},{key:'time',label:'Time',type:'text'},{key:'location',label:'Location',type:'text'},{key:'description',label:'Description',type:'textarea'},{key:'registrationUrl',label:'Registration URL',type:'text'},{key:'badge',label:'Badge',type:'text'}], create: d=>api('/events',{method:'POST',body:JSON.stringify(d)}), update: (id,d)=>api(`/events/${id}`,{method:'PUT',body:JSON.stringify(d)}) },
         blogs: { title: 'Blog', fields: [{key:'title',label:'Title',type:'text',req:true},{key:'slug',label:'Slug',type:'text'},{key:'excerpt',label:'Excerpt',type:'textarea'},{key:'authorName',label:'Author Name',type:'text',req:true},{key:'authorRole',label:'Author Role',type:'text'},{key:'date',label:'Date',type:'date'},{key:'readingTime',label:'Reading Time',type:'text'},{key:'category',label:'Category',type:'select',opts:['tutorial','writeup','news','guide','tech']},{key:'tags',label:'Tags',type:'text',list:true},{key:'thumbnail',label:'Thumbnail',type:'image',imageFolder:'blogs'},{key:'url',label:'URL',type:'text'}], create: d=>{if(typeof d.tags==='string')d.tags=d.tags.split(',').map(s=>s.trim()).filter(Boolean);if(d.date&&typeof d.date==='string')d.date=new Date(d.date).toISOString();return api('/blogs',{method:'POST',body:JSON.stringify(d)})}, update: (id,d)=>{if(typeof d.tags==='string')d.tags=d.tags.split(',').map(s=>s.trim()).filter(Boolean);if(d.date&&typeof d.date==='string')d.date=new Date(d.date).toISOString();return api(`/blogs/${id}`,{method:'PUT',body:JSON.stringify(d)})} },
         admins: { title: 'Admin', fields: [{key:'username',label:'Username',type:'text',req:true},{key:'email',label:'Email',type:'email',req:true},{key:'password',label:'Password',type:'password',req:true},{key:'role',label:'Role',type:'select',opts:['admin','superadmin']}], create: d=>api('/auth/admins',{method:'POST',body:JSON.stringify(d)}), update: null },
       };
