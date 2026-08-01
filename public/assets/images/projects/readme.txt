@@ -1,1 +1,0 @@
--------- 8 is the maximum numbers of projects should be appear on the website, for aesthetic id43@id43

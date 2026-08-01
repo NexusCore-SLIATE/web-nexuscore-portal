@@ -1,1 +1,0 @@
--------- add group disscussions adn cool tech stuff (Important repos like personal journals about what they did , break and fix)
