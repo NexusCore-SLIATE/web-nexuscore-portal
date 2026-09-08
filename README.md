@@ -161,19 +161,6 @@ Run database migrations and generate the Prisma client:
 npx prisma generate
 npx prisma db push
 ```
-
----
-
-## 🚀 Deploying on Vercel
-
-This project deploys as a zero-config Express app on Vercel (`src/index.ts` is the serverless entry; the `public/` folder is served automatically by Vercel's CDN).
-
-1. **Environment variables**: Add the same variables from `.env` to your Vercel project (Settings → Environment Variables): `DATABASE_URL`, `JWT_SECRET`, `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_BUCKET`.
-2. **Domain**: Add `nexuscore.webredirect.org` in Vercel → Project → Settings → Domains.
-3. **Push & deploy**: Connect the repository to Vercel, or run `npx vercel --prod`.
-
-The frontend resolves the API automatically: on your deployed domain it calls the same origin (`https://nexuscore.webredirect.org/api`), and locally it uses `http://localhost:5000/api` — both come from the single `public/js/config.js`.
-
----
-
-*Released under the MIT License. Contributions and security audits from HNDIT students are encouraged.*
+## Domains:
+- Web: [https://nexuscoresliate.pages.dev](https://nexuscoresliate.pages.dev)
+- Admin: [https://nexuscoresliate.pages.dev/admin/login](https://nexuscoresliate.pages.dev/admin/login)
