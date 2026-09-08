@@ -59,7 +59,7 @@ function initSiteLoader() {
   const fill = document.getElementById('loader-progress-fill');
   document.body.classList.add('is-loading');
 
-  const duration = 2000;
+  const duration = 300;
   const start = performance.now();
 
   return new Promise((resolve) => {
@@ -195,7 +195,7 @@ function renderMembersList(searchQuery = '', batchFilter = 'all') {
       <article class="card member-card">
         <div class="card-content-block">
           <div class="member-avatar-container" data-initials="${initials}" aria-hidden="true">
-            <img src="${member.avatar}" alt="${member.name} Avatar" class="member-avatar-img" onerror="this.style.display='none';" loading="lazy" />
+            <img src="${member.avatar}" alt="${member.name} - HNDIT Software Engineering Student at ATI Badulla" class="member-avatar-img" onerror="this.style.display='none';" loading="lazy" />
           </div>
           
           <span class="card-badge" style="margin: 0 auto var(--space-xs) auto; display: block; text-align: center;">
@@ -285,7 +285,7 @@ function renderProjectsList(filterCategory = 'all') {
     <article class="card project-card">
       <div class="project-banner-fallback" aria-hidden="true">
         <!-- Defensive Media Implementation: hides image and triggers customized fallback style on fail -->
-        <img src="${project.image}" alt="${project.title} Banner" class="project-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy" />
+        <img src="${project.image}" alt="${project.title} - HNDIT Student Project at ATI Badulla" class="project-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy" />
         <div class="image-placeholder-fallback" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; border:none; border-radius:0;">
           ${project.title}
         </div>

@@ -3,5 +3,11 @@
   "redirects": [
     { "source": "/admin", "destination": "/admin/dashboard.html", "permanent": true },
     { "source": "/admin/", "destination": "/admin/dashboard.html", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/ati-badulla", "destination": "/ati-badulla.html" },
+    { "source": "/hndit-badulla", "destination": "/hndit-badulla.html" },
+    { "source": "/software-engineering", "destination": "/software-engineering.html" },
+    { "source": "/cybersecurity", "destination": "/cybersecurity.html" }
   ]
 }

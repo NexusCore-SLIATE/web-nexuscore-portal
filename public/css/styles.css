@@ -507,11 +507,15 @@ h1, h2, h3, h4 {
   line-height: 1.7;
 }
 
-.hero-cta-group {
+.hero-cta-group,
+.join-action-group {
   display: flex;
   justify-content: center;
-  gap: var(--space-md);
-  margin-bottom: var(--space-xl);
+  align-items: center;
+  gap: 1.25rem;
+  row-gap: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 

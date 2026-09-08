@@ -23,6 +23,26 @@ app.use(express.urlencoded({ extended: true }));
 const publicDir = path.join(__dirname, "../public");
 const adminDir = path.join(publicDir, "admin");
 
+// Clean SEO Landing Page Routes
+app.get("/ati-badulla", (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, "ati-badulla.html"));
+});
+app.get("/hndit-badulla", (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, "hndit-badulla.html"));
+});
+app.get("/software-engineering", (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, "software-engineering.html"));
+});
+app.get("/cybersecurity", (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, "cybersecurity.html"));
+});
+app.get("/robots.txt", (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, "robots.txt"));
+});
+app.get("/sitemap.xml", (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicDir, "sitemap.xml"));
+});
+
 // Serve frontend
 app.use(express.static(publicDir));
 // Serve admin panel at /admin

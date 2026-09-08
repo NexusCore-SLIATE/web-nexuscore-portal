@@ -1,0 +1,15 @@
+# NexusCore-SLIATE Robots.txt
+# Domain: https://nexuscoresliate.pages.dev
+
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /css/
+Allow: /js/
+
+# Disallow private and administrative endpoints
+Disallow: /admin/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://nexuscoresliate.pages.dev/sitemap.xml
